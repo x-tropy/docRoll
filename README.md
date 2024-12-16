@@ -1,24 +1,3 @@
-# README
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+![docRoll-log](https://fly.storage.tigris.dev/vite/images/docroll.svg)
+## About
+docRoll transforms documentation, books, and tutorials into animated slides with voice-over, tailored to the learner's background and skill level. Perfect for beginners and beyond!
