@@ -54,8 +54,8 @@ const iconComponents = props.items.reduce((acc, item) => {
     >
       <span v-if="item.dividerLeft" class="divider"></span>
       <!-- Dynamically render the icon component -->
-      <component :is="iconComponents[item.icon]" class="icon"/>
-      <span v-if="item.label" class="ml-1.5 text-[13px] leading-none">
+      <component :is="iconComponents[item.icon]" />
+      <span v-if="item.label" class="text-[13px] leading-none select-none" :class="{'ml-1.5': item.icon}">
         {{ item.label }}
       </span>
       <span v-if="item.dividerRight" class="divider"></span>
@@ -65,7 +65,7 @@ const iconComponents = props.items.reduce((acc, item) => {
 
 <style scoped>
 .item {
-  @apply text-white p-2 flex items-center cursor-pointer hover:text-cyan-300 font-medium;
+  @apply text-white p-2.5 flex items-center cursor-pointer hover:text-cyan-300 font-medium relative;
 
   &.active {
     @apply text-cyan-300 bg-black;
@@ -77,6 +77,7 @@ const iconComponents = props.items.reduce((acc, item) => {
 }
 
 .divider {
-  @apply w-[0.5px] bg-white h-full relative left-2;
+  @apply w-[0.5px] bg-gray-500 h-[36px] absolute right-0;
 }
+
 </style>

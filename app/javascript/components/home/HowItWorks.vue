@@ -68,14 +68,14 @@ onUnmounted(() => {
 const items = [
   {
     icon: "search-zoom-in",
-    divideRight: true,
+    dividerRight: true,
     action: "zoomIn",
   },
   {
     label: computed(() => {
       return Math.floor(zoomLevel.value * 100) + '%'
     }),
-    divideRight: true,
+    dividerRight: true,
     action: "zoomOriginal"
   },
   {

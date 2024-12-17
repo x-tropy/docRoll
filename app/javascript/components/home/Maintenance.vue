@@ -13,7 +13,7 @@ import SettingsWheel from "~/components/icons/settings-wheel.vue";
       </div>
     </div>
       <h2 class="font-bold text-3xl tracking-tight">Under Maintenance</h2>
-      <p class="w-1/3 mt-1 text-center">I'm sorry, these features are not ready yet. But they are under heavy development currently, we are looking forward to launch them in March.</p>
+      <p class="w-1/3 mt-1 leading-tight text-center">I'm sorry, these features are not ready yet. But they are under heavy development currently, we are looking forward to launch them in March.</p>
   </div>
 </template>
 
