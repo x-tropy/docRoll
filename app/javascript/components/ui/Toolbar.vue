@@ -44,7 +44,7 @@ const iconComponents = props.items.reduce((acc, item) => {
 </script>
 
 <template>
-  <ul class="rounded-[5px] bg-gray-600 flex overflow-hidden z-20">
+  <ul class="rounded-[5px] bg-gray-600 flex overflow-hidden z-20 shadow-md">
     <li
         v-for="(item, index) in props.items"
         class="item"

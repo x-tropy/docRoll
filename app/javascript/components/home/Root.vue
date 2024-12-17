@@ -47,7 +47,7 @@ const executeTool = (action) => {
 
 <style scoped>
 .canvas-pattern {
-  background-image: url("../../../assets/images/pattern.svg");
+  background-image: url("../../../assets/images/pattern.png");
   background-repeat: repeat;
 }
 </style>
