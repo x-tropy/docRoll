@@ -77,6 +77,6 @@ const iconComponents = props.items.reduce((acc, item) => {
 }
 
 .divider {
-  @apply w-[0.5px] bg-gray-500 h-full relative left-2;
+  @apply w-[0.5px] bg-white h-full relative left-2;
 }
 </style>
