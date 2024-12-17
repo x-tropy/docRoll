@@ -5,15 +5,15 @@ import SettingsWheel from "~/components/icons/settings-wheel.vue";
 <template>
   <div class="w-full h-full flex flex-col justify-center items-center gap-1">
     <div
-        class="w-[70px] aspect-[1/1] mb-4 rounded-full flex items-center justify-center"
+        class="w-[78px] aspect-[1/1] mb-4 rounded-full flex items-center justify-center"
         :class="`bg-orange-500`"
     >
       <div class="p-2 rounded-xl bg-white bg-opacity-35 shadow-lg">
-        <SettingsWheel strokewidth="2" width="24" height="24" class="drop-shadow-lg text-white spin "/>
+        <SettingsWheel strokewidth="2" width="28" height="28" class="drop-shadow-lg text-white spin "/>
       </div>
     </div>
-      <h2 class="font-bold text-3xl tracking-tight">Under Maintenance</h2>
-      <p class="w-1/3 mt-1 leading-tight text-center">I'm sorry, these features are not ready yet. But they are under heavy development currently, we are looking forward to launch them in March.</p>
+      <h2 class="font-bold text-3xl tracking-tight text-gray-600">Under Maintenance</h2>
+      <p class="px-10 sm:px-0 sm:w-1/2 lg:w-1/3 mt-1 leading-tight text-gray-600 text-center">This feature is currently under active development and not yet available. We’re excited to announce that it’s scheduled for launch on <b>February 17</b>. Stay tuned!.</p>
   </div>
 </template>
 
@@ -28,7 +28,7 @@ import SettingsWheel from "~/components/icons/settings-wheel.vue";
 }
 
 .spin {
-  animation: slow-spin 10s linear infinite;
+  animation: slow-spin 8s linear infinite;
 
 }
 </style>

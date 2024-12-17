@@ -4,7 +4,7 @@ import {ref, onMounted, onUnmounted, computed} from "vue";
 import Notice from "~/components/home/Notice.vue";
 import Toolbar from "~/components/ui/Toolbar.vue";
 
-const zoomLevel = ref(1); // Track zoom level
+const zoomLevel = ref(1.1); // Track zoom level
 const position = ref({x: 0, y: 0}); // Track image position
 const dragging = ref(false); // Track dragging state
 const lastMousePosition = ref({x: 0, y: 0}); // Store the last mouse position for calculations
@@ -86,9 +86,9 @@ const items = [
 </script>
 
 <template>
-  <div class="fixed bottom-5 left-5 z-20 flex items-center">
+  <div class="fixed bottom-5 left-5 z-20 flex items-end">
     <Toolbar @tool-event="executeTool" :items="items"/>
-    <Notice/>
+    <Notice class="hidden sm:flex"/>
   </div>
   <div
       class="relative w-full h-screen overflow-hidden cursor-crosshair" :class="{'cursor-grabbing': dragging}"

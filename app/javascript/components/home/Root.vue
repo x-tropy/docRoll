@@ -36,8 +36,8 @@ const executeTool = (action) => {
 <template>
   <div class="h-screen canvas-pattern" @zoom-in="console.log('in')">
     <Toolbar class="fixed top-5 left-5" :items="items" :currentItem="true" currentItemIndex="0" @tool-event="executeTool" />
-    <a href="https://github.com/x-tropy/docRoll" target="_blank">
-      <LogoGithub class="fixed top-5 right-5 z-20" width="28" height="28" />
+    <a href="https://github.com/x-tropy/docRoll" class="fixed top-5 right-5 z-20 bg-white p-0.5 rounded-full" target="_blank">
+      <LogoGithub  width="28" height="28" />
     </a>
     <HowItWorks v-if="activeTabName == 'how-it-works'" />
     <Player v-if="activeTabName == 'player'" />
