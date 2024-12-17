@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineAsyncComponent } from "vue";
+import {ref, defineAsyncComponent} from "vue";
 
 const props = defineProps({
   items: {
@@ -11,6 +11,10 @@ const props = defineProps({
     required: false,
     default: "dark",
   },
+  currentItem: {
+    type: Boolean,
+    required: false
+  },
   currentItemIndex: {
     type: Number,
     required: false,
@@ -18,10 +22,20 @@ const props = defineProps({
 });
 
 const currentItemIndex = ref(props.currentItemIndex || null);
-const select = (i) => (currentItemIndex.value = i);
+
+const emit = defineEmits()
+const select = (i, item) => {
+  if (item.action) {
+    emit("toolEvent", item.action)
+  }
+
+  if (!props.currentItem) return
+  currentItemIndex.value = i
+};
 
 // Dynamically import components for icons
 const iconComponents = props.items.reduce((acc, item) => {
+  if (!item.icon) return acc;
   acc[item.icon] = defineAsyncComponent(() =>
       import(`../icons/${item.icon}.vue`)
   );
@@ -30,17 +44,17 @@ const iconComponents = props.items.reduce((acc, item) => {
 </script>
 
 <template>
-  <ul class="rounded-[5px] bg-gray-600 flex fixed top-5 left-5 overflow-hidden z-20">
+  <ul class="rounded-[5px] bg-gray-600 flex overflow-hidden z-20">
     <li
         v-for="(item, index) in props.items"
         class="item"
         :class="{ active: currentItemIndex == index }"
         :key="index"
-        @click="select(index)"
+        @click="select(index, item)"
     >
       <span v-if="item.dividerLeft" class="divider"></span>
       <!-- Dynamically render the icon component -->
-      <component :is="iconComponents[item.icon]" class="icon" />
+      <component :is="iconComponents[item.icon]" class="icon"/>
       <span v-if="item.label" class="ml-1.5 text-[13px] leading-none">
         {{ item.label }}
       </span>

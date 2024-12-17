@@ -1,6 +1,8 @@
 <script setup>
-import imageUrl from "../../assets/images/how-it-works.png"
-import {ref, onMounted, onUnmounted} from "vue";
+import imageUrl from "../../../assets/images/how-it-works.png"
+import {ref, onMounted, onUnmounted, computed} from "vue";
+import Notice from "~/components/home/Notice.vue";
+import Toolbar from "~/components/ui/Toolbar.vue";
 
 const zoomLevel = ref(1); // Track zoom level
 const position = ref({x: 0, y: 0}); // Track image position
@@ -42,6 +44,13 @@ const handleWheel = (e) => {
   }
 };
 
+const executeTool = action => {
+  const zoomFactor = 0.1;
+  if (action == 'zoomIn') zoomLevel.value = Math.min(zoomLevel.value + zoomFactor, 2);
+  else if (action == 'zoomOut') zoomLevel.value = Math.max(zoomLevel.value - zoomFactor, 0.8);
+  else zoomLevel.value = 1
+}
+
 // Attach event listeners
 onMounted(() => {
   window.addEventListener("mousemove", handleMouseMove);
@@ -55,9 +64,32 @@ onUnmounted(() => {
   window.removeEventListener("mouseup", handleMouseUp);
   window.removeEventListener("wheel", handleWheel);
 });
+
+const items = [
+  {
+    icon: "search-zoom-in",
+    divideRight: true,
+    action: "zoomIn",
+  },
+  {
+    label: computed(() => {
+      return Math.floor(zoomLevel.value * 100) + '%'
+    }),
+    divideRight: true,
+    action: "zoomOriginal"
+  },
+  {
+    icon: "search-zoom-out",
+    action: "zoomOut"
+  }
+]
 </script>
 
 <template>
+  <div class="fixed bottom-5 left-5 z-20 flex items-center">
+    <Toolbar @tool-event="executeTool" :items="items"/>
+    <Notice/>
+  </div>
   <div
       class="relative w-full h-screen overflow-hidden cursor-crosshair" :class="{'cursor-grabbing': dragging}"
       @mousedown="handleMouseDown"
