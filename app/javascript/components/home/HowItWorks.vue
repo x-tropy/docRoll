@@ -40,7 +40,7 @@ const handleWheel = (e) => {
   if (e.deltaY < 0) {
     zoomLevel.value = Math.min(zoomLevel.value + zoomFactor, 2); // Limit max zoom
   } else {
-    zoomLevel.value = Math.max(zoomLevel.value - zoomFactor, 0.8); // Limit min zoom
+    zoomLevel.value = Math.max(zoomLevel.value - zoomFactor, 0.5); // Limit min zoom
   }
 };
 
