@@ -1,5 +1,6 @@
 <script setup>
 import SettingsWheel from "~/components/icons/settings-wheel.vue";
+import Map from "@/components/icons/map.vue";
 </script>
 
 <template>
@@ -14,6 +15,7 @@ import SettingsWheel from "~/components/icons/settings-wheel.vue";
     </div>
       <h2 class="font-bold text-3xl tracking-tight text-gray-600">Under Maintenance</h2>
       <p class="px-10 sm:px-0 sm:w-1/2 lg:w-1/3 mt-1 leading-tight text-gray-600 text-center">This feature is currently under active development and not yet available. We’re excited to announce that it’s scheduled for launch on <b>February 17</b>. Stay tuned!</p>
+      <a href="https://noteos.org/buwei/roadmap-of-docroll" target="_blank" class="btn-primary btn btn-md mt-2 flex gap-2 items-center"><Map  /> Project Roadmap</a>
   </div>
 </template>
 
