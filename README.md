@@ -5,7 +5,7 @@ Programming knowledge is often shared in dense blocks of text—books, documenta
 
 _docRoll_ transforms documentation, books, and tutorials into animated slides with voice-over, tailored to the learner's background and skill level. Perfect for beginners and beyond!
 
-Read more: [Project Initiation of docRoll](https://noteos.org/buwei/what-is-docroll/)
+Read more: [Project Initiative of docRoll](https://noteos.org/buwei/what-is-docroll/)
 
 ## Key Components
 
