@@ -3,6 +3,8 @@ import imageUrl from "../../../assets/images/how-it-works.png"
 import {ref, onMounted, onUnmounted, computed} from "vue";
 import Notice from "~/components/home/Notice.vue";
 import Toolbar from "~/components/ui/Toolbar.vue";
+import SearchZoomIn from "@/components/icons/search-zoom-in.vue";
+import SearchZoomOut from "@/components/icons/search-zoom-out.vue";
 
 const zoomLevel = ref(1.1); // Track zoom level
 const position = ref({x: 0, y: 0}); // Track image position
@@ -67,7 +69,7 @@ onUnmounted(() => {
 
 const items = [
   {
-    icon: "search-zoom-in",
+    icon: SearchZoomIn,
     dividerRight: true,
     action: "zoomIn",
   },
@@ -79,7 +81,7 @@ const items = [
     action: "zoomOriginal"
   },
   {
-    icon: "search-zoom-out",
+    icon: SearchZoomOut,
     action: "zoomOut"
   }
 ]

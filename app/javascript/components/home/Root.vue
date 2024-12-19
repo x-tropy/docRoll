@@ -5,22 +5,25 @@ import LogoGithub from "~/components/icons/logo-github.vue";
 import {ref} from "vue";
 import Player from "~/components/home/Player.vue";
 import Editor from "~/components/home/Editor.vue";
+import CQuestion from "@/components/icons/c-question.vue";
+import NEdit from "@/components/icons/n-edit.vue";
+import CircleCaretRight from "@/components/icons/circle-caret-right.vue";
 
 const items = [
   {
-    icon: "c-question",
+    icon: CQuestion,
     label: "How it works",
     dividerRight: true,
     action: "how-it-works"
   },
   {
-    icon: "n-edit",
+    icon: NEdit,
     label: "Editor",
     dividerRight: true,
     action: "editor"
   },
   {
-    icon: "circle-caret-right",
+    icon: CircleCaretRight,
     label: "Player",
     action: "player"
   }
