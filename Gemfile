@@ -65,3 +65,5 @@ end
 gem "dockerfile-rails", ">= 1.6", :group => :development
 
 gem 'vite_rails'
+
+gem 'dotenv-rails', groups: [:development, :test]

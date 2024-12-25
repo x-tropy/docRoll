@@ -1,0 +1,17 @@
+<!-- app/views/voiceovers/show.html.erb -->
+<h1>Voiceover</h1>
+
+<p><strong>Text:</strong> <%= @voiceover.text %></p>
+
+<% if @voiceover.file.attached? %>
+  <p><strong>Audio:</strong></p>
+  <audio controls>
+    <source src="<%= url_for(@voiceover.file) %>" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <p><%= link_to "Download Audio", url_for(@voiceover.file), download: true %></p>
+<% else %>
+  <p>Audio file is not available yet.</p>
+<% end %>
+
+<%= link_to "Create Another Voiceover", new_voiceover_path %>

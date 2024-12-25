@@ -1,0 +1,24 @@
+<!-- app/views/voiceovers/new.html.erb -->
+<h1>Create Voiceover</h1>
+
+<%= form_with model: @voiceover, local: true do |form| %>
+  <% if @voiceover.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@voiceover.errors.count, "error") %> prohibited this voiceover from being saved:</h2>
+      <ul>
+        <% @voiceover.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :text %>
+    <%= form.text_area :text %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Generate Audio" %>
+  </div>
+<% end %>
