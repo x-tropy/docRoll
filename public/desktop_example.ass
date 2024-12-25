@@ -6,7 +6,7 @@ PlayDepth: 0
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,Inter Tight,20,&H00FFFFFF ,&H000000FF,&H80000000,&H80000000,0,0,0,0,100,100,0,0,3,5,0,2,10,10,10,1
+Style: Default,Inter Tight SemiBold,22,&H00FFFFFF ,&H000000FF,&H80000000,&H80000000,0,0,0,0,100,100,0,0,3,5,0,2,10,10,10,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
