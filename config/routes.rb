@@ -1,7 +1,11 @@
 Rails.application.routes.draw do
   get "home/index"
   resources :scripts
-  resources :voiceovers, only: [:new, :create, :show]
+  resources :voiceovers, only: [:new, :create, :show] do
+    member do
+      post :transcribe
+    end
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
