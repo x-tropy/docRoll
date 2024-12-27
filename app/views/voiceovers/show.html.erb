@@ -17,8 +17,9 @@
 <% end %>
 
 <% if @voiceover.transcription.present? %>
-  <h2>Transcription</h2>
-  <pre><code><%= @voiceover.transcription %></code></pre>
+  <h2 class="font-semibold text-lg">Original Transcription</h2>
+  <pre class="overflow-auto"><code><%= @voiceover.transcription %></code></pre>
+  <div id="transcription" transcription="<%= @voiceover.transcription %>"></div>
 <% end %>
 
 <%= link_to "Create Another Voiceover", new_voiceover_path %>
