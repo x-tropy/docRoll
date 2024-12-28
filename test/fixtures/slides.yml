@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  text_for_display: MyText
+  text_for_voiceover: MyText
+  image: MyString
+  indicator: MyString
+  page_number: 1
+  section: one
+
+two:
+  text_for_display: MyText
+  text_for_voiceover: MyText
+  image: MyString
+  indicator: MyString
+  page_number: 1
+  section: two

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_26_085823) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_28_215911) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -39,6 +39,18 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_26_085823) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "courses", force: :cascade do |t|
+    t.string "title"
+    t.date "production_date"
+    t.string "author"
+    t.string "link"
+    t.text "raw"
+    t.string "video"
+    t.text "toc"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "scripts", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -46,13 +58,38 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_26_085823) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "sections", force: :cascade do |t|
+    t.text "raw"
+    t.integer "course_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["course_id"], name: "index_sections_on_course_id"
+  end
+
+  create_table "slides", force: :cascade do |t|
+    t.text "text_for_display"
+    t.text "text_for_voiceover"
+    t.string "image"
+    t.string "indicator"
+    t.integer "page_number"
+    t.integer "section_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["section_id"], name: "index_slides_on_section_id"
+  end
+
   create_table "voiceovers", force: :cascade do |t|
     t.text "text"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "transcription"
+    t.integer "slide_id"
+    t.index ["slide_id"], name: "index_voiceovers_on_slide_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "sections", "courses"
+  add_foreign_key "slides", "sections"
+  add_foreign_key "voiceovers", "slides"
 end
