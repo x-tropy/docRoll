@@ -8,4 +8,11 @@
     .btn-primary {
         @apply text-white bg-gray-600 hover:bg-black;
     }
+    .simple-title {
+        @apply font-semibold text-xl my-8;
+    }
+    .input {
+        @apply focus:outline-none focus:border-blue-400 border-2 p-2 rounded;
+    }
+
 }

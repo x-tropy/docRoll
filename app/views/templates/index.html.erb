@@ -1,0 +1,18 @@
+<h1 class="simple-title">All Templates</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>Slots</th>
+    <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @templates.each do |template| %>
+    <tr>
+      <td><%= template.slots %></td>
+      <td><%= template.description %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

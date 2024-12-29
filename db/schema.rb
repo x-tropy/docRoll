@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2024_12_28_215911) do
+ActiveRecord::Schema[8.0].define(version: 2024_12_29_115559) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -45,7 +45,6 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_28_215911) do
     t.string "author"
     t.string "link"
     t.text "raw"
-    t.string "video"
     t.text "toc"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -69,13 +68,19 @@ ActiveRecord::Schema[8.0].define(version: 2024_12_28_215911) do
   create_table "slides", force: :cascade do |t|
     t.text "text_for_display"
     t.text "text_for_voiceover"
-    t.string "image"
     t.string "indicator"
     t.integer "page_number"
     t.integer "section_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["section_id"], name: "index_slides_on_section_id"
+  end
+
+  create_table "templates", force: :cascade do |t|
+    t.text "slots"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "voiceovers", force: :cascade do |t|

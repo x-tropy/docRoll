@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "templates/index"
+  get "templates/new"
+  post "/templates/create"
   get "home/index"
   resources :scripts
   resources :voiceovers, only: [:new, :create, :show] do
