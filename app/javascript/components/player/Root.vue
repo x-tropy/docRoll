@@ -1,5 +1,5 @@
 <script setup>
-import Maintenance from "~/components/home/Maintenance.vue";
+import Maintenance from "../home/Maintenance.vue";
 </script>
 
 <template>

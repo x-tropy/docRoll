@@ -1,13 +1,13 @@
 <script setup>
-import Toolbar from "~/components/ui/Toolbar.vue";
-import HowItWorks from "~/components/home/HowItWorks.vue"
-import LogoGithub from "~/components/icons/logo-github.vue";
+import Toolbar from "../ui/Toolbar.vue";
+import HowItWorks from "../home/HowItWorks.vue"
+import LogoGithub from "../icons/logo-github.vue";
 import {ref} from "vue";
-import Player from "~/components/home/Player.vue";
-import Editor from "~/components/home/Editor.vue";
-import CQuestion from "@/components/icons/c-question.vue";
-import NEdit from "@/components/icons/n-edit.vue";
-import CircleCaretRight from "@/components/icons/circle-caret-right.vue";
+import Player from "../player/Root.vue";
+import Editor from "../editor/Root.vue";
+import CQuestion from "../icons/c-question.vue";
+import NEdit from "../icons/n-edit.vue";
+import CircleCaretRight from "../icons/circle-caret-right.vue";
 
 const items = [
   {
