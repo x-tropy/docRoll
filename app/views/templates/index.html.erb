@@ -1,18 +1,7 @@
-<h1 class="simple-title">All Templates</h1>
+<div class="container">
+  <h1 class="simple-title flex items-center justify-between">All Templates
+    <a href="/templates/new" class="btn btn-primary btn-md">New template</a>
+  </h1>
 
-<table>
-  <thead>
-  <tr>
-    <th>Slots</th>
-    <th>Description</th>
-  </tr>
-  </thead>
-  <tbody>
-  <% @templates.each do |template| %>
-    <tr>
-      <td><%= template.slots %></td>
-      <td><%= template.description %></td>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
+  <div id="list-templates" data-templates="<%= @templates.to_json %>"></div>
+</div>
