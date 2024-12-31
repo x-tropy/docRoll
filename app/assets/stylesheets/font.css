@@ -31,6 +31,14 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'SourceSerifPro';
+    src: url("https://fly.storage.tigris.dev/fonts/SourceSerifPro/SourceSerifPro-Bold.otf") format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
 /*Inter*/
 @font-face {
     font-family: 'Inter';

@@ -3,7 +3,7 @@ import {onMounted, ref} from "vue";
 import html2canvas from "html2canvas";
 import domtoimage from "dom-to-image"
 import Map from "@/components/icons/map.vue";
-import Mist from "../../../assets/images/mist.jpg"
+import Mist from "../../../assets/images/mist.png"
 
 const props = defineProps({
   transcription: {

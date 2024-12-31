@@ -3,7 +3,8 @@ import submitForm from "../../utils/submit-form.js"
 import {onBeforeMount, ref} from "vue";
 import T1 from "../templates/T1.vue"
 import T2 from "../templates/T2.vue"
-import TemplateForm from "@/components/editor/TemplateForm.vue";
+import TemplateForm from "./TemplateForm.vue";
+import IAdd from "@/components/icons/i-add.vue";
 
 const templates = ref(null)
 const openFormId = ref(null)
@@ -41,6 +42,7 @@ function closeForm(data) {
   }
 }
 
+
 </script>
 
 <!--
@@ -60,20 +62,29 @@ index:
 -->
 
 <template>
-  <ul class="container">
+  <ul class="m-20">
     <TemplateForm v-if="openFormId == -1" :index="null" method="POST" @close-form="closeForm"/>
-    <button v-else class="btn btn-primary btn-md" @click="openFormId = -1">New</button>
+    <div v-else class="flex flex-row-reverse">
+    <button  class="btn btn-secondary btn-md" @click="openFormId = -1"><IAdd class="h-4" /> <span>Create new template</span></button>
+    </div>
     <li v-for="(t, i) in templates" key="i" class="my-10">
       <div v-if="openFormId != t.id">
-        <ul class="mb-2">
-          <li v-for="(entry, j) in Object.keys(t)" key="j" class="flex justify-between">
-            <span class="font-medium">{{ entry }}</span> <span>{{ t[entry] }}</span>
+
+        <!--        template information-->
+        <ul class="mb-2 pt-10 border-t-2 border-gray-300 pb-5">
+          <li v-for="(entry, j) in Object.keys(t)" key="j" class="grid grid-cols-4">
+            <span class="font-medium">{{ entry }}</span> <span class="col-span-2">{{ t[entry] }}</span>
+
+            <!--        actions-->
+            <div v-if="j==0" class="flex flex-row-reverse gap-2">
+              <a class="btn btn-danger btn-sm" @click="deleteEntry(t.id, i)">Delete</a>
+              <a class="btn btn-secondary btn-sm" @click="openForm(t.id)">Edit</a>
+            </div>
           </li>
         </ul>
-        <div class="flex gap-2">
-          <a class="btn btn-danger btn-sm" @click="deleteEntry(t.id, i)">Delete</a>
-          <a class="btn btn-primary btn-sm" @click="openForm(t.id)">Edit</a>
-        </div>
+
+
+        <!--        template preview-->
         <component :is="templateComponents[t.name]" v-if="Object.keys(templateComponents).includes(t.name)"/>
       </div>
       <TemplateForm v-else method="PATCH" :index="i" :template="t" @close-form="closeForm"/>
