@@ -30,19 +30,40 @@ function openForm(id) {
   openFormId.value = id
 }
 
-function closeForm(updatedTemplate) {
+function closeForm(data) {
   openFormId.value = null
-  if (updatedTemplate) {
-    const {index, id, name, slots, description} = updatedTemplate
-    templates.value.splice(index, 1, {name, id, slots, description})
+  if (data) {
+    const {index, id, name, slots, description} = data
+    if (index === null)
+      templates.value.splice(0, 0, {name, id, slots, description})
+    else
+      templates.value.splice(index, 1, {name, id, slots, description})
   }
 }
 
 </script>
 
+<!--
+openFormId:
+* -1 means creating new
+* (others) means updating the existed
+
+<TemplateForm />
+
+method:
+* POST
+* PATCH
+
+index:
+* null
+* i means the order of item in the list
+-->
+
 <template>
   <ul class="container">
-    <li v-for="(t, i) in templates" key="i" class="mb-10">
+    <TemplateForm v-if="openFormId == -1" :index="null" method="POST" @close-form="closeForm"/>
+    <button v-else class="btn btn-primary btn-md" @click="openFormId = -1">New</button>
+    <li v-for="(t, i) in templates" key="i" class="my-10">
       <div v-if="openFormId != t.id">
         <ul class="mb-2">
           <li v-for="(entry, j) in Object.keys(t)" key="j" class="flex justify-between">

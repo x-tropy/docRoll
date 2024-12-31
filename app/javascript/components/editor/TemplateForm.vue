@@ -12,16 +12,19 @@ const props = defineProps({
     required: true
   },
   index: {
-    type: Number
+    type: Number || null
   }
 })
 let template
-let title = "Create New Templates"
-let url = "/templates"
+let title
+let url
 
 if (props.method === 'PATCH') {
   title = `Update Template #${props.template.id}`
   url = `/templates/${props.template.id}`
+} else if (props.method === "POST") {
+  title = "Create New Template"
+  url = "/templates"
 }
 
 const message = ref("")
@@ -45,7 +48,7 @@ async function submit() {
     }
     emit('closeForm', {
       index: props.index,
-      id: props.template.id,
+      id: props.method == "PATCH" ? props.template.id : data.id,
       name: name.value,
       slots: slots.value,
       description: description.value

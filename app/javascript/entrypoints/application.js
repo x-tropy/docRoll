@@ -2,8 +2,6 @@ import {createApp} from "vue";
 import Hello from "../components/Hello.vue"
 import Home from "../components/home/Root.vue"
 import Transcription from "../components/player/Transcription.vue";
-import TemplateForm from "../components/editor/TemplateForm.vue";
-import ListTemplates from "../components/editor/Templates.vue"
 
 const app = createApp(Hello)
 app.mount(document.querySelector("#app"))
