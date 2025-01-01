@@ -8,14 +8,16 @@
 }
 
 .content {
-    @apply bg-white bg-opacity-65 backdrop-blur h-full mb-3 mt-1 rounded-xl text-gray-600;
+    @apply bg-white bg-opacity-65 backdrop-blur h-full mb-3 mt-1 rounded-xl text-gray-600 relative overflow-y-auto;
 }
 
 .header {
     @apply flex justify-between px-2 items-center;
-    .date {
+
+    .indicator {
         @apply font-serif text-base;
     }
+
     .logo {
         @apply inline-block h-4;
     }
@@ -23,19 +25,45 @@
 
 .article {
     @apply font-serif text-lg pt-10 w-4/5 mx-auto;
+
     h1 {
         @apply text-3xl font-bold my-4;
     }
+
     h2 {
         @apply text-2xl font-semibold my-2;
     }
+
     strong {
         @apply font-semibold;
     }
-    ul {
+
+    ul, ol {
         @apply pl-5;
-        li {
-            @apply list-disc;
+
+    }
+
+    ul > li {
+        @apply list-disc;
+    }
+
+    ol > li {
+        @apply list-decimal;
+    }
+
+    p > code {
+        @apply text-base text-cyan-500;
+    }
+
+    pre {
+        @apply border text-cyan-500 text-sm  my-2 leading-tight;
+        code {
+            @apply rounded-lg;
+        }
+        &::before {
+            content: attr(data-lang);
+            @apply absolute -top-3 right-0 bg-gray-100 px-2 py-1 text-xs text-gray-600 rounded-t border border-b-0;
         }
     }
+
 }

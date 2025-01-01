@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "dom-to-image": "^2.6.0",
+    "highlight.js": "^11.11.1",
     "html2canvas": "^1.4.1",
     "marked": "^15.0.4",
+    "marked-highlight": "^2.2.1",
     "vue": "^3.5.13"
   }
 }

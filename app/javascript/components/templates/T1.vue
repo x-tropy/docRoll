@@ -1,6 +1,6 @@
 <script setup>
 import Logo from "../../../assets/images/docroll-logo.png"
-import ToggleFullscreen from "./ToggleFullscreen.vue";
+import ButtonToggle from "./ToggleFullscreen.vue";
 import {ref} from "vue"
 import toggleFullscreen from "../../utils/toggle-fullscreen.js";
 
@@ -30,7 +30,7 @@ const frame = ref(null)
 
 <template>
   <div class="bg-mist mx-auto relative px-16 py-14" ref="frame">
-    <ToggleFullscreen @toggle-fullscreen="toggleFullscreen(frame)"/>
+    <ButtonToggle @toggle-fullscreen="toggleFullscreen(frame)"/>
     <div class="flex justify-between">
       <img class="inline-block h-7" :src="Logo"/>
       <span class="font-serif text-xl">{{ productionDate }}</span>
