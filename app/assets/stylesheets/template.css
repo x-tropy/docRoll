@@ -27,11 +27,15 @@
     @apply font-serif text-lg pt-10 w-4/5 mx-auto;
 
     h1 {
-        @apply text-3xl font-bold my-4;
+        @apply text-4xl font-bold my-4;
     }
 
     h2 {
-        @apply text-2xl font-semibold my-2;
+        @apply text-3xl font-semibold my-2;
+    }
+
+    h3 {
+        @apply text-xl font-semibold my-2;
     }
 
     strong {
@@ -56,13 +60,12 @@
     }
 
     pre {
-        @apply border text-cyan-500 text-sm  my-2 leading-tight;
+        @apply border text-cyan-500 text-sm  my-2 leading-tight relative;
         code {
-            @apply rounded-lg;
+            @apply rounded-lg border-2 border-blue-200;
         }
-        &::before {
-            content: attr(data-lang);
-            @apply absolute -top-3 right-0 bg-gray-100 px-2 py-1 text-xs text-gray-600 rounded-t border border-b-0;
+        .code-language-label {
+            @apply absolute top-0 right-0 bg-blue-300 text-white px-2 py-1 rounded-tr-lg rounded-bl-lg;
         }
     }
 
