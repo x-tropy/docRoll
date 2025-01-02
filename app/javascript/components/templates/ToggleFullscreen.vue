@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue"
+import {ref, onMounted, onBeforeUnmount} from "vue"
 import FullScreen from "@/components/icons/full-screen.vue"
 import Pinch from "@/components/icons/pinch.vue"
 
@@ -31,13 +31,13 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <button 
-    class="z-50 btn btn-sm btn-primary absolute top-8 right-3 opacity-40 hover:opacity-100"
+  <button
+    class="z-10 btn btn-sm btn-primary absolute top-8 right-3 opacity-40 hover:opacity-100"
     @click="handleClick"
     :aria-label="isFullscreenNow ? 'Exit fullscreen' : 'Enter fullscreen'"
   >
-    <component 
-      :is="isFullscreenNow ? Pinch : FullScreen" 
+    <component
+      :is="isFullscreenNow ? Pinch : FullScreen"
       class="h-4"
     />
     <span>{{ isFullscreenNow ? "Exit" : "Fullscreen" }}</span>

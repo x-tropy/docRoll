@@ -12,6 +12,11 @@ import {ref} from "vue";
 
 const items = [
   {
+    label: "Templates",
+    icon: Layout25,
+    action: "templates"
+  },
+  {
     label: "Courses",
     icon: PcPlayMedia,
     divideRight: true,
@@ -26,14 +31,10 @@ const items = [
     icon: Canvas,
     divideRight: true,
     action: "slides"
-  }, {
-    label: "Templates",
-    icon: Layout25,
-    action: "templates"
   },
 ]
 
-const activeTabName = ref("courses")
+const activeTabName = ref("templates")
 
 function executeTool(action) {
   activeTabName.value = action

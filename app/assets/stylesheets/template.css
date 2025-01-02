@@ -4,7 +4,7 @@
 }
 
 .frame {
-    @apply bg-mist mx-auto relative px-3 pt-1 flex flex-col;
+    @apply bg-mist relative px-3 pt-1 flex flex-col mx-auto;
 }
 
 .content {

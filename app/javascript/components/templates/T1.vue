@@ -29,7 +29,7 @@ const frame = ref(null)
 </script>
 
 <template>
-  <div class="bg-mist mx-auto relative px-16 py-14" ref="frame">
+  <div class="bg-mist relative px-16 py-14 mx-auto" ref="frame">
     <ButtonToggle @toggle-fullscreen="toggleFullscreen(frame)"/>
     <div class="flex justify-between">
       <img class="inline-block h-7" :src="Logo"/>
@@ -37,7 +37,7 @@ const frame = ref(null)
     </div>
     <div class="absolute bottom-16">
       <span class="font-serif text-xl inline-block mb-4">{{ author }} / Course</span>
-      <h1 class="font-serif text-4xl font-bold">{{ courseTitle }}</h1>
+      <h1 class="font-serif text-5xl font-bold">{{ courseTitle }}</h1>
     </div>
   </div>
 </template>

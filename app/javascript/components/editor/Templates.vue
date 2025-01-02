@@ -2,7 +2,10 @@
 import submitForm from "../../utils/submit-form.js"
 import {onBeforeMount, ref} from "vue";
 import T1 from "../templates/T1.vue"
+import T4 from "../templates/T4.vue"
 import T2 from "../templates/T2.vue"
+import T5 from "../templates/T5.vue"
+import T3 from "../templates/T3.vue"
 import TemplateForm from "./TemplateForm.vue";
 import IAdd from "@/components/icons/i-add.vue";
 
@@ -16,7 +19,7 @@ onBeforeMount(async () => {
 
 
 const templateComponents = {
-  T1, T2
+  T1, T2, T3, T4, T5
 }
 
 async function deleteEntry(id, i) {
@@ -65,7 +68,9 @@ index:
   <ul class="m-20">
     <TemplateForm v-if="openFormId == -1" :index="null" method="POST" @close-form="closeForm"/>
     <div v-else class="flex flex-row-reverse">
-    <button  class="btn btn-secondary btn-md" @click="openFormId = -1"><IAdd class="h-4" /> <span>Create new template</span></button>
+      <button class="btn btn-secondary btn-md" @click="openFormId = -1">
+        <IAdd class="h-4"/>
+        <span>Create new template</span></button>
     </div>
     <li v-for="(t, i) in templates" key="i" class="my-10">
       <div v-if="openFormId != t.id">
@@ -82,7 +87,6 @@ index:
             </div>
           </li>
         </ul>
-
 
         <!--        template preview-->
         <component :is="templateComponents[t.name]" v-if="Object.keys(templateComponents).includes(t.name)"/>
