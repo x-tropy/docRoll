@@ -1,9 +1,10 @@
 <script setup>
 
+import Maintenance from "@/components/home/Maintenance.vue";
 </script>
 
 <template>
-<h1 class="simple-title container">Slides</h1>
+  <Maintenance />
 </template>
 
 <style scoped>

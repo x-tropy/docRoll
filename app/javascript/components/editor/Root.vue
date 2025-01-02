@@ -15,8 +15,7 @@ const items = [
     label: "Templates",
     icon: Layout25,
     action: "templates"
-  },
-  {
+  },{
     label: "Courses",
     icon: PcPlayMedia,
     divideRight: true,

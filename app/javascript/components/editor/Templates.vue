@@ -6,6 +6,7 @@ import T4 from "../templates/T4.vue"
 import T2 from "../templates/T2.vue"
 import T5 from "../templates/T5.vue"
 import T3 from "../templates/T3.vue"
+import T6 from "../templates/T6.vue"
 import TemplateForm from "./TemplateForm.vue";
 import IAdd from "@/components/icons/i-add.vue";
 
@@ -19,7 +20,7 @@ onBeforeMount(async () => {
 
 
 const templateComponents = {
-  T1, T2, T3, T4, T5
+  T1, T2, T3, T4, T5,T6
 }
 
 async function deleteEntry(id, i) {
