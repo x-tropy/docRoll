@@ -15,7 +15,7 @@ const props = defineProps({
     type: Boolean,
     required: false
   },
-  currentItemIndex: {
+  activeTabIndex: {
     type: Number,
     required: false,
   },
@@ -25,16 +25,14 @@ const props = defineProps({
   }
 });
 
-const currentItemIndex = ref(props.currentItemIndex || null);
-
 const emit = defineEmits()
 const select = (i, item) => {
   if (item.action) {
-    emit("toolEvent", item.action)
+    emit("switch-tab", item.action)
   }
 
   if (!props.currentItem) return
-  currentItemIndex.value = i
+  props.activeTabIndex = i
 };
 </script>
 
@@ -43,7 +41,7 @@ const select = (i, item) => {
     <li
         v-for="(item, index) in props.items"
         class="item"
-        :class="{ active: currentItemIndex == index, ['item-'+props.size]: true }"
+        :class="{ active: activeTabIndex == index, ['item-'+props.size]: true }"
         :key="index"
         @click="select(index, item)"
     >

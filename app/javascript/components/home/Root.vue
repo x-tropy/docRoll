@@ -2,7 +2,7 @@
 import Toolbar from "../ui/Toolbar.vue";
 import HowItWorks from "../home/HowItWorks.vue"
 import LogoGithub from "../icons/logo-github.vue";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import Player from "../player/Root.vue";
 import Editor from "../editor/Root.vue";
 import CQuestion from "../icons/c-question.vue";
@@ -30,15 +30,19 @@ const items = [
 ]
 
 const activeTabName = ref("how-it-works")
+const activeTabIndex = computed(() => {
+  const tabs = items.map(el => el.action)
+  return tabs.indexOf(activeTabName.value)
+})
 
-const executeTool = (action) => {
+const activateTab = (action) => {
   activeTabName.value = action
 }
 </script>
 
 <template>
   <div class="h-screen canvas-pattern" @zoom-in="console.log('in')">
-    <Toolbar class="fixed top-5 left-5" :items="items" :currentItem="true" currentItemIndex="0" @tool-event="executeTool" />
+    <Toolbar class="fixed top-5 left-5" :items="items" :currentItem="true" :activeTabIndex="activeTabIndex" @switch-tab="activateTab" />
     <a href="https://github.com/x-tropy/docRoll" class="fixed top-5 right-5 z-20 bg-white p-0.5 rounded-full" target="_blank">
       <LogoGithub  width="28" height="28" />
     </a>

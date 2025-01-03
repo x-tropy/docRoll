@@ -1,22 +1,24 @@
-.thin-scrollbar {
-    scrollbar-width: none; /* For Firefox */
-    scrollbar-color: lightgray transparent; /* For Firefox */
+/* Applies to all scrollable elements */
+::-webkit-scrollbar {
+    width: 8px; /* Thin width for vertical scrollbar */
+    height: 8px; /* Thin height for horizontal scrollbar */
 }
 
-/* For WebKit browsers (Chrome, Safari, Edge) */
-.thin-scrollbar::-webkit-scrollbar {
-    width: 8px; /* Adjust the width of the scrollbar */
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2); /* Darker thumb for visibility */
+    border-radius: 10px; /* Rounded corners */
 }
 
-.thin-scrollbar::-webkit-scrollbar-track {
-    background: transparent; /* Background of the scrollbar track */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2); /* Darker on hover */
 }
 
-.thin-scrollbar::-webkit-scrollbar-thumb {
-    background: #888; /* Color of the scrollbar thumb */
-    border-radius: 4px; /* Rounded corners for the scrollbar thumb */
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.15); /* Light track color */
 }
 
-.thin-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Color of the scrollbar thumb on hover */
+/* For Firefox (using scrollbar-width) */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0);
 }

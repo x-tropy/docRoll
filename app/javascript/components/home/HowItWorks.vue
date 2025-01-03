@@ -89,7 +89,7 @@ const items = [
 
 <template>
   <div class="fixed bottom-5 left-5 z-20 flex items-end">
-    <Toolbar @tool-event="executeTool" :items="items"/>
+    <Toolbar @switch-tab="executeTool" :items="items"/>
     <Notice class="hidden sm:flex"/>
   </div>
   <div
