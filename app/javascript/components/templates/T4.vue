@@ -3,10 +3,9 @@ import Logo from "../../../assets/images/docroll-logo.png"
 import ToggleFullscreen from "./ToggleFullscreen.vue";
 import {onMounted, onUnmounted, ref} from "vue"
 import toggleFullscreen from "../../utils/toggle-fullscreen.js";
-import {Marked} from "marked";
-import {markedHighlight} from "marked-highlight";
-import hljs from 'highlight.js';
+import {createMarkedInstance} from "@/utils/md-parser.js";
 import 'highlight.js/styles/github.css'
+import prependCodeLanguageLabel from "../../utils/prepend-code-language-label.js"
 
 defineProps({
   indicator: {
@@ -40,33 +39,11 @@ defineProps({
 })
 
 const frame = ref(null)
-
-const marked = new Marked(
-  markedHighlight({
-    emptyLangClass: 'hljs',
-    langPrefix: 'hljs language-',
-    highlight(code, lang, info) {
-      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-      return hljs.highlight(code, {language}).value;
-    }
-  })
-);
+const marked = createMarkedInstance()
 
 
 onMounted(() => {
-  const codeElements = Array.from(document.querySelectorAll("pre code"))
-  codeElements.forEach(el => {
-    // avoid duplicate rendering
-    if (el.previousElementSibling?.classList.contains('code-language-label')) return
-
-    const language = el.className.match(/language-(\w+)/)[1];
-    if (language) {
-      const label = document.createElement('span');
-      label.textContent = language;
-      label.classList.add('code-language-label');
-      el.parentNode.insertBefore(label, el);
-    }
-  })
+  prependCodeLanguageLabel()
 })
 
 
