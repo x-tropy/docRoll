@@ -16,7 +16,7 @@ class CoursesController < ApplicationController
   end
 
   def create
-    # logger.debug "Parameters: #{params.inspect}"
+    logger.debug "Parameters: #{params.inspect}"
 
     @course = Course.new(course_params)
 
@@ -29,7 +29,8 @@ class CoursesController < ApplicationController
 
     if @course.save
       render json: {
-        message: "Course created successfully!"
+        message: "Course created successfully!",
+        id: @course.id
       }, status: :created
     else
       render json: {
