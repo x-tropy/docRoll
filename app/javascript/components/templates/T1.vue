@@ -3,15 +3,12 @@ import Logo from "../../../assets/images/docroll-logo.png"
 import ButtonToggle from "./ToggleFullscreen.vue";
 import {ref} from "vue"
 import toggleFullscreen from "../../utils/toggle-fullscreen.js";
+import {longDate} from "@/utils/format-date.js";
 
 defineProps({
   productionDate: {
     type: String,
-    default: new Date().toLocaleDateString('en-US', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    })
+    default: longDate()
   },
   author: {
     type: String,
