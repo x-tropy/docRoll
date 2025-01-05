@@ -59,6 +59,10 @@
         @apply text-base text-cyan-500;
     }
 
+    table code {
+        @apply text-cyan-500 text-base;
+    }
+
     pre {
         @apply border text-cyan-500 text-sm  my-2 leading-tight relative;
         code {

@@ -98,7 +98,7 @@ onMounted(() => {
             <span>{{ course.courseTitle || "Editing" }}</span></div>
         </div>
         <div class="flex-grow flex justify-center items-center">
-          <h2 class="font-serif text-2xl mb-7 text-center font-bold">{{ course.title || "Course Name" }}</h2>
+          <h2 class="font-serif text-2xl mb-7 mx-6 text-center font-bold">{{ course.title || "Course Name" }}</h2>
         </div>
       </div>
     </li>
