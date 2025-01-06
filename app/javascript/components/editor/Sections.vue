@@ -2,7 +2,7 @@
 import {computed, nextTick, onMounted, ref, watch} from "vue"
 import BlankState from "@/components/ui/BlankState.vue";
 import PcPlayMedia from "@/components/icons/pc-play-media.vue";
-import {createMarkedInstance} from "@/utils/md-parser.js";
+import {createMarkedInstance, markdownToSections} from "@/utils/md-parser.js";
 import ArrowTopRight from "@/components/icons/arrow-top-right.vue";
 import Divider from "@/components/icons/space-divider.vue";
 import {debounce} from "lodash-es";
@@ -79,6 +79,9 @@ async function handleSubmit() {
     'raw': raw.value,
     'toc': toc.value
   })
+
+  // store this array in Sections table
+  console.log(markdownToSections(raw.value))
 
   if (response.ok) {
     console.log(response)
