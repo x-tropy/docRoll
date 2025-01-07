@@ -2,8 +2,11 @@ class SectionsController < ApplicationController
   def create
     course_id = section_params[:course_id]
 
-    # Remove all existing sections for the course_id
-    Section.where(course_id: course_id).destroy_all
+    # Remove all existing sections 
+    # and their associated slides for the course_id
+    sections_to_remove = Section.where(course_id: course_id)
+    Slide.where(section_id: sections_to_remove.pluck(:id)).destroy_all
+    sections_to_remove.destroy_all
 
     sections_data = JSON.parse(section_params[:sections]).map do |section_data|
       {
@@ -17,6 +20,9 @@ class SectionsController < ApplicationController
 
     Section.transaction do
       sections.each(&:save!)
+
+      # Trigger slide creation after sections are saved
+      SlideCreatorJob.perform_later(course_id)
     end
 
     render json: { status: 'success', sections: sections }, status: :created
