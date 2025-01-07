@@ -59,14 +59,27 @@ const updateParsedMarkdown = debounce(() => {
     title.value = sectionsContainer.value.querySelector('h1')?.innerText
 
     // toc
-    const headings = sectionsContainer.value.querySelectorAll('h1, h2, h3, h4, h5')
-    toc.value = JSON.stringify(
-      Array.from(headings).map(heading => ({
-        level: parseInt(heading.tagName[1]),
-        text: heading.textContent
-      })),
-      null, 2
-    )
+    const headings = Array.from(sectionsContainer.value.querySelectorAll('h2, h3'))
+    const result = {}
+    let h2 = ''
+    let h2Index = 0
+    let h3Index = 1
+
+    headings.forEach(heading => {
+      if (heading.tagName === 'H2') {
+        h2Index++
+        h2 = `${h2Index} ${heading.textContent}`
+        result[h2] = []
+
+        //   reset indexes
+        h3Index = 1
+      } else if (heading.tagName === 'H3') {
+        result[h2].push(`${h2Index}.${h3Index} ${heading.textContent}`)
+        h3Index++
+      }
+    })
+
+    toc.value = JSON.stringify(result, null, 2)
   })
 }, 300)
 
@@ -86,14 +99,10 @@ async function handleSubmit() {
 
   // store this array in Sections table
   const sections = markdownToSections(raw.value)
-  console.log({sections})
   const response2 = await submitForm("/sections", "POST", {
     course_id: props.courseId,
     sections: sections
   })
-
-  console.log(response2)
-
 }
 
 
