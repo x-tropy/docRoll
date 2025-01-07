@@ -34,6 +34,12 @@ export function markdownToSections(str) {
                     cache = ''
                 }
 
+                // headers h4, h5, h6 are regarded as part of body
+                if (token.depth > 3) {
+                    cache += token.raw
+                    return
+                }
+
                 // continue processing with header
                 result.push({
                     raw: token.text,
