@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_07_083900) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_07_185719) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -74,7 +74,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_07_083900) do
     t.integer "section_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "prompt"
+    t.integer "template_id"
     t.index ["section_id"], name: "index_slides_on_section_id"
+    t.index ["template_id"], name: "index_slides_on_template_id"
   end
 
   create_table "templates", force: :cascade do |t|
@@ -98,5 +101,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_07_083900) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "sections", "courses"
   add_foreign_key "slides", "sections"
+  add_foreign_key "slides", "templates"
   add_foreign_key "voiceovers", "slides"
 end
