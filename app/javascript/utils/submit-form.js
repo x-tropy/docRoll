@@ -6,6 +6,7 @@ export default function submitForm(url, requestType, formDataObj, csrfTokenMetaN
 
         // Populate FormData
         Object.entries(formDataObj).forEach(([key, value]) => {
+            if (typeof value === 'object') value = JSON.stringify(value)
             formData.append(key, value);
         });
     }

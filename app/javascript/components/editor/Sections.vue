@@ -56,7 +56,7 @@ const updateParsedMarkdown = debounce(() => {
   parsedMarkdown.value = marked.parse(raw.value)
   nextTick(() => {
     // course name
-    title.value = sectionsContainer.value.querySelector('h1').innerText
+    title.value = sectionsContainer.value.querySelector('h1')?.innerText
 
     // toc
     const headings = sectionsContainer.value.querySelectorAll('h1, h2, h3, h4, h5')
@@ -80,12 +80,20 @@ async function handleSubmit() {
     'toc': toc.value
   })
 
-  // store this array in Sections table
-  console.log(markdownToSections(raw.value))
-
   if (response.ok) {
     console.log(response)
   }
+
+  // store this array in Sections table
+  const sections = markdownToSections(raw.value)
+  console.log({sections})
+  const response2 = await submitForm("/sections", "POST", {
+    course_id: props.courseId,
+    sections: sections
+  })
+
+  console.log(response2)
+
 }
 
 

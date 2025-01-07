@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       get :show
     end
   end
+  resources :sections, only: [:create]
 
 
   get "home/index"

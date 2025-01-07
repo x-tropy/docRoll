@@ -15,42 +15,44 @@ export const createMarkedInstance = () => {
 export function markdownToSections(str) {
     const tokens = marked.lexer(str);
     const result = [];
-    let body = ''
+    let cache = ''
 
     tokens.forEach((token) => {
         switch (token.type) {
             case 'space':{
-                if (!body) return
-                body += token.raw
+                if (!cache) return
+                cache += token.raw
                 return
             }
             case 'heading': {
                 // headers serve as separator
-                if (body) {
+                if (cache) {
                     result.push({
-                        raw: body
+                        raw: cache,
+                        role: 'body'
                     })
-                    body = ''
+                    cache = ''
                 }
 
                 // continue processing with header
                 result.push({
-                    text: token.text,
-                    depth: token.depth
+                    raw: token.text,
+                    role: 'h'+token.depth
                 });
                 return
             }
             case 'hr': {
                 // hr also serves as separator
-                if (!body) return
+                if (!cache) return
                 result.push({
-                    raw: body
+                    raw: cache,
+                    role: 'body'
                 })
-                body = ''
+                cache = ''
                 return
             }
             default: {
-                body += token.raw
+                cache += token.raw
             }
         }
     });
