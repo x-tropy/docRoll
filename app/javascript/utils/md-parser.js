@@ -17,49 +17,43 @@ export function markdownToSections(str) {
     const result = [];
     let cache = ''
 
-    tokens.forEach((token) => {
-        switch (token.type) {
-            case 'space':{
-                if (!cache) return
-                cache += token.raw
-                return
-            }
-            case 'heading': {
-                // headers serve as separator
-                if (cache) {
-                    result.push({
-                        raw: cache,
-                        role: 'body'
-                    })
-                    cache = ''
-                }
-
-                // headers h4, h5, h6 are regarded as part of body
-                if (token.depth > 3) {
-                    cache += token.raw
-                    return
-                }
-
-                // continue processing with header
-                result.push({
-                    raw: token.text,
-                    role: 'h'+token.depth
-                });
-                return
-            }
-            case 'hr': {
-                // hr also serves as separator
-                if (!cache) return
+    tokens.forEach((token, index) => {
+        // finishing up current body
+        if (token.type === "heading" || token.type === "hr") {
+            if (cache) {
                 result.push({
                     raw: cache,
                     role: 'body'
                 })
                 cache = ''
-                return
             }
-            default: {
+        }
+
+        // main logic
+        if (token.type === "heading") {
+            if (token?.depth <= 3) { // process with major headers
+                result.push({
+                    raw: token.text,
+                    role: 'h' + token.depth
+                });
+            } else { // other headers should be part of body
                 cache += token.raw
             }
+        } else if (token.type === "space") {
+            // side effect: ignore preceding spaces
+            if (cache) {
+                cache += token.raw
+            }
+        } else { // all others should be part of body
+            cache += token.raw
+        }
+
+        // if this is the last one
+        if (index === tokens.length - 1) {
+            result.push({
+                raw: cache,
+                role: 'body'
+            })
         }
     });
     return result
