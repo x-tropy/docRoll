@@ -60,22 +60,19 @@ const updateParsedMarkdown = debounce(() => {
 
     // toc
     const headings = Array.from(sectionsContainer.value.querySelectorAll('h2, h3'))
-    const result = {}
-    let h2 = ''
-    let h2Index = 0
-    let h3Index = 1
+    const result = []
+    let chapterIndex = 0
 
     headings.forEach(heading => {
       if (heading.tagName === 'H2') {
-        h2Index++
-        h2 = `${h2Index} ${heading.textContent}`
-        result[h2] = []
-
-        //   reset indexes
-        h3Index = 1
+        chapterIndex++
+        result[chapterIndex-1] = {
+          chapterIndex: chapterIndex,
+          chapterTitle: heading.textContent,
+          subChapters: []
+        }
       } else if (heading.tagName === 'H3') {
-        result[h2].push(`${h2Index}.${h3Index} ${heading.textContent}`)
-        h3Index++
+        result[chapterIndex-1].subChapters.push(heading.textContent)
       }
     })
 
