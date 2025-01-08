@@ -2,17 +2,14 @@ class SectionsController < ApplicationController
   def create
     course_id = section_params[:course_id]
 
-    # Remove all existing sections 
+    # Remove all existing sections
     # and their associated slides for the course_id
-    sections_to_remove = Section.where(course_id: course_id)
-    Slide.where(section_id: sections_to_remove.pluck(:id)).destroy_all
-    sections_to_remove.destroy_all
-
+    Section.where(course_id: course_id).delete_all
     sections_data = JSON.parse(section_params[:sections]).map do |section_data|
       {
         course_id: course_id,
-        raw: section_data['raw'], # Ensure keys are strings since JSON.parse outputs string keys
-        role: section_data['role']
+        raw: section_data["raw"], # Ensure keys are strings since JSON.parse outputs string keys
+        role: section_data["role"]
       }
     end
 
@@ -25,9 +22,9 @@ class SectionsController < ApplicationController
       SlideCreatorJob.perform_later(course_id)
     end
 
-    render json: { status: 'success', sections: sections }, status: :created
+    render json: { status: "success", sections: sections }, status: :created
   rescue ActiveRecord::RecordInvalid => e
-    render json: { status: 'error', errors: e.record.errors.full_messages }, status: :unprocessable_entity
+    render json: { status: "error", errors: e.record.errors.full_messages }, status: :unprocessable_entity
   end
 
   private

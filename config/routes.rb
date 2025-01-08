@@ -1,9 +1,7 @@
 Rails.application.routes.draw do
   resources :templates, only: [:index, :destroy, :edit, :update, :create, :new]
-  resources :courses, only: [:index, :destroy, :edit, :update, :create, :new] do
-    member do
-      get :show
-    end
+  resources :courses do
+    resources :slides, only: :index
   end
   resources :sections, only: [:create]
 
