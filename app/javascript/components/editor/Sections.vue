@@ -35,7 +35,6 @@ onMounted(async () => {
 
     if (response.ok) {
       const courseDetail = await response.json()
-      console.log({courseDetail})
       productionDate.value = courseDetail.production_date
       link.value = courseDetail.link
       title.value = courseDetail.title
@@ -66,13 +65,13 @@ const updateParsedMarkdown = debounce(() => {
     headings.forEach(heading => {
       if (heading.tagName === 'H2') {
         chapterIndex++
-        result[chapterIndex-1] = {
+        result[chapterIndex - 1] = {
           chapterIndex: chapterIndex,
           chapterTitle: heading.textContent,
           subChapters: []
         }
       } else if (heading.tagName === 'H3') {
-        result[chapterIndex-1].subChapters.push(heading.textContent)
+        result[chapterIndex - 1].subChapters.push(heading.textContent)
       }
     })
 
@@ -91,7 +90,6 @@ async function handleSubmit() {
   })
 
   if (response.ok) {
-    console.log(response)
   }
 
   // store this array in Sections table
@@ -100,6 +98,9 @@ async function handleSubmit() {
     course_id: props.courseId,
     sections: sections
   })
+
+  if (response2.ok) {
+  }
 }
 
 
@@ -163,7 +164,7 @@ watch((raw) => {
           </div>
           <div>
             <p class="label required">Production Date</p>
-            <input type="text" class="input w-full" placeholder="example: 17 December, 2024" v-model="productionDate"/>
+            <input type="text" class="input w-full" placeholder="example: 2025-01-15" v-model="productionDate"/>
           </div>
           <div class="col-span-2">
             <p class="label required">Course Name</p>

@@ -34,7 +34,7 @@ class SlideCreatorJob < ApplicationJob
       when "h2"
         chapter = get_chapter(toc, section.raw)
         sub_chapter_index = 0
-        current_indicator = "#{chapter['chapterIndex']} #{chapter['chapterTitle']}"
+        current_indicator = "§#{chapter['chapterIndex']} #{chapter['chapterTitle']}"
         result = [
           {
             course_id: course.id,

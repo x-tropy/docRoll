@@ -59,7 +59,7 @@ function gotoCourses() {
            @switch-tab="activateTab"/>
   <Courses v-if="activeTabName == 'courses'" @goto-sections="gotoSections"/>
   <Sections v-if="activeTabName == 'sections'" :courseId="courseId" @goto-courses="gotoCourses"/>
-  <Slides v-if="activeTabName == 'slides'"/>
+  <Slides v-if="activeTabName == 'slides'"  :courseId="courseId" @goto-courses="gotoCourses" @goto-sections="gotoSections"/>
   <Templates v-if="activeTabName == 'templates'"/>
 
 </template>
