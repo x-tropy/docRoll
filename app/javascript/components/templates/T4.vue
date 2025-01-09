@@ -58,10 +58,10 @@ onMounted(() => {
     </div>
     <div class="content">
       <div class="article" v-html="marked.parse(body)"></div>
-      <span class="absolute text-sm font-semibold bottom-0 right-0 rounded-br-xl rounded-tl-xl bg-white px-2 py-0.5">{{
-          pageNumber
-        }}</span>
     </div>
+    <span class="absolute text-sm font-semibold bottom-3 right-3 rounded-br-xl rounded-tl-xl bg-white px-2 py-0.5">
+      {{ pageNumber }}
+    </span>
   </div>
 </template>
 

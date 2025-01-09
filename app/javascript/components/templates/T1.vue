@@ -30,7 +30,7 @@ const frame = ref(null)
     <ButtonToggle @toggle-fullscreen="toggleFullscreen(frame)"/>
     <div class="flex justify-between">
       <img class="inline-block h-7" :src="Logo"/>
-      <span class="font-serif text-xl">{{ productionDate }}</span>
+      <span class="font-serif text-xl">{{ longDate(productionDate) }}</span>
     </div>
     <div class="absolute bottom-16">
       <span class="font-serif text-xl inline-block mb-4">{{ author }} / Course</span>
