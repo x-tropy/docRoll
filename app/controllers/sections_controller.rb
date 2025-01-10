@@ -18,13 +18,18 @@ class SectionsController < ApplicationController
     Section.transaction do
       sections.each(&:save!)
 
-      # Trigger slide creation after sections are saved
-      SlideCreatorJob.perform_later(course_id)
+      # slide creator job done successfully
+      if SlideCreatorJob.perform_now(course_id)
+        render json: { status: "success", sections: sections }, status: :created
+      else
+        raise ActiveRecord::Rollback, "\n\n\n>>Slide creation failed<<\n\n\n"
+      end
     end
 
-    render json: { status: "success", sections: sections }, status: :created
   rescue ActiveRecord::RecordInvalid => e
     render json: { status: "error", errors: e.record.errors.full_messages }, status: :unprocessable_entity
+  rescue => e
+    render json: { status: "error", errors: ["Slide creation failed: #{e.message}"] }, status: :unprocessable_entity
   end
 
   private

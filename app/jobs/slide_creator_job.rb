@@ -13,7 +13,6 @@ class SlideCreatorJob < ApplicationJob
     current_indicator = ""
 
     slides_data = sections.flat_map do |section|
-      logger.info "\n\n\n->-> #{page_number}\n\n\n"
       page_number += 1
       case section.role
       when "h1"
@@ -104,18 +103,19 @@ class SlideCreatorJob < ApplicationJob
         }.to_json
       }
     )
-    # logger.info "\n\n\n->->! #{slides_data}"
-    # slides_data.each do |data|
-    #   logger.info "\n\n\n ->-> #{data.to_json}"
-    #   # Slide.create!(data)
-    # end
 
     Slide.transaction do
       slides_data.each do |data|
-        # logger.info "\n\n\n ->-> #{data.to_json}"
         Slide.create!(data)
       end
     end
+
+    # transation succeed!
+    true
+
+  rescue => e
+    logger.error "\n\n\n>>Slide creation failed: #{e.message}<<\n\n\n"
+    false
   end
 
   private

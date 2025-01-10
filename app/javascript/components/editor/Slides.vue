@@ -41,10 +41,13 @@ onMounted(async () => {
   }
 
   const resp = await fetch(`/courses/${props.courseId}/slides`)
-  const data = await resp.json()
-  if (data.slides.length === 0) slidesNotFound.value = true
-  slides.value = data.slides
-  templates.value = data.templates
+  if (resp.ok) {
+    const data = await resp.json()
+    if (data.slides.length === 0) slidesNotFound.value = true
+    console.log(data.slides)
+    slides.value = data.slides
+    templates.value = data.templates
+  }
 })
 </script>
 
@@ -95,7 +98,7 @@ onMounted(async () => {
     <ul class="w-[65px] mt-16 overflow-y-auto overflow-x-hidden ">
       <li
         class="w-[40px] py-2 m-1.5 font-mono text-sm font-black bg-gray-200 select-none hover:shadow-md hover:bg-white hover:text-cyan-400 hover:bg-gray-200 text-center rounded  hover:cursor-pointer "
-        v-for="i in range(0, slides.length - 1)"
+        v-for="i in range(0, slides.length)"
         :class="{'!bg-gray-600 shadow-md text-cyan-300 hover:bg-gray-600': slideIndex === i}"
         @click="slideIndex = i"
       >
@@ -112,6 +115,7 @@ onMounted(async () => {
                  :courseTitle="textForDisplay?.courseTitle"
                  :pageNumber="slides[slideIndex]?.page_number"
                  :productionDate="textForDisplay?.productionDate"
+                 :sourceUrl="textForDisplay?.sourceUrl"
                  :body="textForDisplay?.body"
                  :chapterIndex="textForDisplay?.chapterIndex"
                  :chapterTitle="textForDisplay?.chapterTitle"
