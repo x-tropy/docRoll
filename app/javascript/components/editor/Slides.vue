@@ -80,7 +80,7 @@ onMounted(async () => {
         <SpaceDivider strokewidth="2" width="28" height="28" class="drop-shadow-lg text-white"/>
       </template>
       <template #action>
-        <button class="btn-primary btn btn-md mt-2" @click="emit('goto-sections')">
+        <button class="btn-primary btn btn-md mt-2" @click="emit('goto-sections', courseId)">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
             <title>arrow-left</title>
             <g fill="#fff">
