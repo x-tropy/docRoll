@@ -23,12 +23,13 @@ const frame = ref(null)
     </div>
     <div class="h-full flex flex-col items-center justify-center">
       <img class="h-20 mb-4" :src="partyPopper"/>
-      <h1 class="font-serif text-4xl font-bold mb-4">Thanks for Watching!</h1>
-      <p>Visit the source document -> <span class="text-blue-400 underline">https://docroll.fly.dev</span></p>
+      <h1 class="font-serif text-4xl font-bold mb-8">Thanks for Watching!</h1>
+      <p>For more information, visit source document:</p>
+      <p class="w-[400px] text-blue-400 underline break-all text-center"><a :href="sourceUrl">{{sourceUrl}}</a></p>
     </div>
     <div class="text-right mb-3">
-      <p class="p-2 text-white inline-block bg-black bg-opacity-50 rounded">✨ Turn doc into animated video: <span
-        class="underline text-blue-200 pr-1">https://docroll.fly.dev</span></p>
+      <p class="p-2 text-white inline-block bg-black bg-opacity-50 rounded">✨ Turn doc into animated video: <a
+        class="underline text-blue-200 pr-1" href="https://docroll.fly.dev">https://docroll.fly.dev</a></p>
     </div>
   </div>
 </template>

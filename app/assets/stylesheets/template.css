@@ -35,7 +35,7 @@
     }
 
     h3 {
-        @apply text-xl font-semibold my-2;
+        @apply text-2xl font-semibold my-2;
     }
 
     strong {
@@ -57,6 +57,19 @@
 
     p > code {
         @apply text-base text-cyan-500;
+    }
+
+    table {
+        @apply font-sans text-base;
+        tr td, tr th{
+            @apply p-2;
+        }
+        tr th {
+            @apply text-left font-semibold ;
+        }
+        tbody tr:nth-child(odd) {
+            @apply bg-gray-200;
+        }
     }
 
     table code {
