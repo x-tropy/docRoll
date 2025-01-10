@@ -13,6 +13,7 @@ class SlideCreatorJob < ApplicationJob
     current_indicator = ""
 
     slides_data = sections.flat_map do |section|
+      logger.info "\n\n\n->-> #{page_number}\n\n\n"
       page_number += 1
       case section.role
       when "h1"
@@ -27,7 +28,7 @@ class SlideCreatorJob < ApplicationJob
             text_for_display: {
               productionDate: course.production_date,
               author: course.author,
-              courseTitle: section.raw
+              courseTitle: course.title
             }.to_json
           }
         ]

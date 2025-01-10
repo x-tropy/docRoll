@@ -17,7 +17,7 @@ defineProps({
   courseTitle: {
     type: String,
     required: true,
-    default: "Getting Started with Rails"
+    default: "A Course by docroll"
   }
 })
 

@@ -63,7 +63,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="text-center mt-20">
+  <div class="text-center pt-20">
     <a href="/" class=" inline-block ">
       <img class=" h-14" :src="docrollLogo"/>
     </a>

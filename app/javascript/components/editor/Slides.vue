@@ -34,8 +34,12 @@ const textForDisplay = computed(() => {
 const slidesNotFound = ref(false)
 
 onMounted(async () => {
-  console.log(props.courseId)
-  if (props.courseId === null) return
+  // check course id
+  if (typeof parseInt(props.courseId) !== 'number') {
+    console.log("courseId is invalid", props.courseId)
+    return
+  }
+
   const resp = await fetch(`/courses/${props.courseId}/slides`)
   const data = await resp.json()
   if (data.slides.length === 0) slidesNotFound.value = true
@@ -87,10 +91,10 @@ onMounted(async () => {
       </template>
     </BlankState>
   </div>
-  <div class="flex flex-row h-full">
-    <ul class="w-[65px] mt-16 overflow-y-auto overflow-x-hidden bg-gray-200">
+  <div v-else class="flex flex-row h-full">
+    <ul class="w-[65px] mt-16 overflow-y-auto overflow-x-hidden ">
       <li
-        class="w-[40px] py-2 m-1.5 font-mono text-sm font-black select-none hover:shadow-md hover:bg-white hover:text-cyan-400 hover:bg-gray-200 text-center rounded  hover:cursor-pointer "
+        class="w-[40px] py-2 m-1.5 font-mono text-sm font-black bg-gray-200 select-none hover:shadow-md hover:bg-white hover:text-cyan-400 hover:bg-gray-200 text-center rounded  hover:cursor-pointer "
         v-for="i in range(0, slides.length - 1)"
         :class="{'!bg-gray-600 shadow-md text-cyan-300 hover:bg-gray-600': slideIndex === i}"
         @click="slideIndex = i"
@@ -98,13 +102,14 @@ onMounted(async () => {
         {{ i + 1 }}
       </li>
     </ul>
-    <div class="w-[400px] pt-16 bg-white overflow-auto">
+    <div class="w-[400px] mt-16 overflow-auto">
       <pre><code>{{ slides[slideIndex] }}</code></pre>
     </div>
-    <div class="w-auto p-4 overflow-auto pt-16 flex-grow">
+    <div class=" p-4 pt-16 overflow-auto flex-grow">
       <component :is="templateComponents[slides[slideIndex]?.template_name]"
                  :author="textForDisplay?.author"
                  :indicator="slides[slideIndex]?.indicator"
+                 :courseTitle="textForDisplay?.courseTitle"
                  :pageNumber="slides[slideIndex]?.page_number"
                  :productionDate="textForDisplay?.productionDate"
                  :body="textForDisplay?.body"

@@ -30,11 +30,18 @@ const parsedMarkdown = ref('')
 
 onMounted(async () => {
   try {
+    // check courseId
+    if (typeof parseInt(props.courseId) !== "number") {
+      console.log("courseId invalid", props.courseId)
+      return
+    }
+
     isLoading.value = true
     const response = await fetch('/courses/' + props.courseId)
 
     if (response.ok) {
       const courseDetail = await response.json()
+      console.log({courseDetail})
       productionDate.value = courseDetail.production_date
       link.value = courseDetail.link
       title.value = courseDetail.title
@@ -54,8 +61,10 @@ const sectionsContainer = ref(null)
 const updateParsedMarkdown = debounce(() => {
   parsedMarkdown.value = marked.parse(raw.value)
   nextTick(() => {
-    // course name
-    title.value = sectionsContainer.value.querySelector('h1')?.innerText
+    // course title
+    if (title.value === "" || title.value === null) {
+      title.value = sectionsContainer.value.querySelector("h1")?.innerText
+    }
 
     // toc
     const headings = Array.from(sectionsContainer.value.querySelectorAll('h2, h3'))
@@ -90,6 +99,7 @@ async function handleSubmit() {
   })
 
   if (response.ok) {
+    console.log("course is submitted successfully!")
   }
 
   // store this array in Sections table
@@ -100,11 +110,15 @@ async function handleSubmit() {
   })
 
   if (response2.ok) {
+    console.log("sections are submitted successfully!")
   }
 }
 
 
 watch((raw) => {
+  // if sectionsContainer is not mounted yet
+  if (!sectionsContainer.value) return
+
   updateParsedMarkdown()
 })
 
@@ -134,7 +148,7 @@ watch((raw) => {
     </BlankState>
   </div>
   <div v-else>
-    <BlankState class="mt-14 mb-6" title="Divide into Sections" color="blue"
+    <BlankState class="pt-14 mb-6" title="Divide into Sections" color="blue"
                 body="docroll has automatically divided the source document into sections. Customize it by adding or removing &ldquo;---&rdquo; to <b>create</b> or <b>merge</b> sections as needed.">
       <template #icon>
         <Divider strokewidth="2" width="28" height="28" class="drop-shadow-lg text-white"/>
