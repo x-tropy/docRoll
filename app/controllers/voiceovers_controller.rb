@@ -19,118 +19,135 @@ class VoiceoversController < ApplicationController
     @voiceover = Voiceover.find(params[:id])
   end
 
-  def transcribe
-    logger.info "-> -> Starting transcription for Voiceover ##{params[:id]}"
-
-    @voiceover = Voiceover.find(params[:id])
-
-    if @voiceover.file.attached?
-      logger.debug "-> -> Audio file is attached, proceeding with transcription."
-      transcription_result = generate_transcription(@voiceover.file)
-
-      if transcription_result
-        @voiceover.update(transcription: transcription_result)
-        redirect_to @voiceover, notice: "Transcription generated successfully!"
-      else
-        redirect_to @voiceover, alert: "Failed to generate transcription."
-      end
-    else
-      redirect_to @voiceover, alert: "No audio file attached to transcribe."
-    end
-  end
-
   private
 
-  def generate_transcription(file)
-    openai_api_key = ENV["Speech_to_Text"]
-    file_path = ActiveStorage::Blob.service.send(:path_for, file.key)
-
-    if file.content_type != 'audio/mpeg'
-      logger.error "-> -> File is not an MP3. Content type: #{file.content_type}"
-      return nil
-    else
-      logger.info "-> -> #{file_path}"
-    end
-
-    # Create a temporary file with the correct extension
-    temp_file = Tempfile.new(["temp_audio", ".mp3"]).tap do |tempfile|
-      tempfile.binmode
-      tempfile.write(file.download) # Download and write the file content
-      tempfile.rewind
-    end
-
-    uri = URI.parse("https://api.openai.com/v1/audio/transcriptions")
-    request = Net::HTTP::Post.new(uri)
-    request["Authorization"] = "Bearer #{openai_api_key}"
-    form_data = [
-      ['file', File.open(temp_file.path)],
-      ['timestamp_granularities[]', 'word'],
-      ['model', 'whisper-1'],
-      ['response_format', 'verbose_json']
-    ]
-    request.set_form form_data, 'multipart/form-data'
-
-    response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-      http.request(request)
-    end
-
-    if response.is_a?(Net::HTTPSuccess)
-      response.body
-    else
-      Rails.logger.error "Transcription API error: #{response.body}"
-      nil
-    end
-  end
-
   def voiceover_params
-    params.require(:voiceover).permit(:text)
+    params.require(:voiceover).permit(:text, :slide_id)
   end
 
   def generate_audio(voiceover)
-    # Replace this with actual OpenAI API call logic
     api_key = ENV["Text_to_Speech"]
-    logger.info "-> -> key: #{api_key}"
-    voice_id = "21m00Tcm4TlvDq8ikWAM" # Replace with the desired voice ID
+    voice_id = "21m00Tcm4TlvDq8ikWAM" # Rachel's voice
     uri = URI.parse("https://api.elevenlabs.io/v1/text-to-speech/#{voice_id}/with-timestamps?output_format=mp3_22050_32")
     request = Net::HTTP::Post.new(uri)
     request.content_type = "application/json"
     request["Xi-Api-Key"] = api_key
-    request.body = JSON.dump({
-                               "text" => voiceover.text,
-                               "model_id" => "eleven_turbo_v2",
-                               "voice_settings" => {
-                                 "stability" => 0.5,
-                                 "similarity_boost" => 0.75
-                               }
-                             })
+    request.body = JSON.dump(
+      {
+        "text" => voiceover.text,
+        "model_id" => "eleven_turbo_v2",
+        "voice_settings" => {
+          "stability" => 0.5,
+          "similarity_boost" => 0.75
+        }
+      }
+    )
 
     response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
       http.request(request)
     end
 
     if response.is_a?(Net::HTTPSuccess)
-      audio_data = JSON.parse(response.body) # Parse JSON response
-      logger.info "-> -> Response: #{audio_data}"
+      # careful, now data is in Ruby Hash
+      data = JSON.parse(response.body)
 
-      # Decode Base64 audio data
-      audio_base64 = audio_data["audio_base64"]
-      decoded_audio = Base64.decode64(audio_base64)
+      decoded_audio = Base64.decode64(
+        data["audio_base64"]
+      )
 
-      # Delete the "audio_base64" property
-      # audio_data.delete("audio_base64")
-
-      # Store the remaining response as transcription
-      voiceover.update(transcription: audio_data["alignment"].to_json)
-
-      # Attach decoded audio to Active Storage
       voiceover.file.attach(
         io: StringIO.new(decoded_audio),
         filename: "voiceover_#{voiceover.id}.mp3",
         content_type: "audio/mpeg"
       )
+
+      voiceover.update(
+        transcription: data["normalized_alignment"].to_json,
+        subtitles: get_subtitles(data["normalized_alignment"]).to_json
+      )
     else
-      logger.error "-> -> Audio generation failed: #{response.body}"
+      logger.error "\n\n\n>> Audio generation failed: #{response.body}<<\n\n\n"
       flash[:alert] = "Audio generation failed: #{response.body}"
     end
   end
+
+  def get_subtitles(alignment)
+    characters = alignment["characters"]
+    start_times = alignment["character_start_times_seconds"]
+    end_times = alignment["character_end_times_seconds"]
+
+    # Group characters into words
+    words = group_characters_to_words(characters, start_times, end_times)
+
+    # Split into subtitles
+    subtitles = split_into_subtitles(words, max_words: 15, min_words: 5)
+    subtitles
+
+    # Output subtitles
+    # subtitles.each_with_index do |subtitle, index|
+    #   puts "\n👉 Subtitle #{index + 1}:"
+    #   puts "   Text: #{subtitle[:text]}"
+    #   puts "   Start Time: #{'%.3f' % subtitle[:start_time]}s"
+    #   puts "   End Time: #{'%.3f' % subtitle[:end_time]}s"
+    #   puts "   Duration: #{'%.3f' % subtitle[:duration]}s"
+    # end
+  end
+
+  def group_characters_to_words(characters, start_times, end_times)
+    words = []
+    current_word = ""
+    current_start_time = nil
+
+    characters.each_with_index do |char, index|
+      if char == " " || index == characters.size - 1
+        # Add current word if it's not empty
+        unless current_word.empty?
+          end_time = (index == characters.size - 1 && char != " ") ? end_times[index] : end_times[index - 1]
+          current_word += char if char != " "
+          words << { word: current_word, start_time: current_start_time, end_time: end_time }
+          current_word = ""
+        end
+        current_start_time = nil
+      else
+        current_word += char
+        current_start_time ||= start_times[index]
+      end
+    end
+
+    words
+  end
+
+  def split_into_subtitles(words, max_words:, min_words:)
+    subtitles = []
+    current_part = []
+
+    words.each do |word|
+      current_part << word
+
+      if word[:word].end_with?(".") || current_part.size >= max_words
+        # Split at period or when max_words reached
+        subtitles << finalize_subtitle(current_part)
+        current_part = []
+      elsif current_part.size >= min_words && (word[:word].end_with?(",") || word[:word].end_with?(";"))
+        # Allow splitting at commas or semicolons if min_words is satisfied
+        subtitles << finalize_subtitle(current_part)
+        current_part = []
+      end
+    end
+
+    # Add remaining words
+    subtitles << finalize_subtitle(current_part) unless current_part.empty?
+
+    subtitles
+  end
+
+  def finalize_subtitle(words)
+    {
+      text: words.map { |w| w[:word] }.join(" "),
+      start_time: words.first[:start_time],
+      end_time: words.last[:end_time],
+      duration: words.last[:end_time] - words.first[:start_time]
+    }
+  end
+
 end

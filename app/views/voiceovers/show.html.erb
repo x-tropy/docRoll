@@ -1,25 +1,30 @@
-<!-- app/views/voiceovers/show.html.erb -->
-<h1>Voiceover</h1>
+<div class="w-2/3 mx-auto">
+  <!-- app/views/voiceovers/show.html.erb -->
+  <h1 class="simple-title mb-2 pb-2 border-b-2 text-3xl">Voiceover #<%= @voiceover.id %></h1>
 
-<p><strong>Text:</strong> <%= @voiceover.text %></p>
+  <h2 class="simple-title mb-2 pb-2 border-b-2">Text for Voiceover</h2>
+  <p class="text-lg"><%= @voiceover.text %></p>
 
-<% if @voiceover.file.attached? %>
-  <p><strong>Audio:</strong></p>
-  <audio controls>
-    <source src="<%= url_for(@voiceover.file) %>" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
-  <p><%= link_to "Download Audio", url_for(@voiceover.file), download: true %></p>
+  <% if @voiceover.file.attached? %>
+    <h2 class="simple-title mb-2 pb-2 border-b-2">Generated Audio</h2>
+    <a class="text-blue-400 hover:cursor-pointer" href="https://elevenlabs.io/docs/api-reference/text-to-speech/convert-with-timestamps?playground=%2Fdocs%2Fapi-reference%2Ftext-to-speech%2Fconvert-with-timestamps">Elevenlabs
+      API ↗</a>
+    <audio controls>
+      <source src="<%= url_for(@voiceover.file) %>" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <%= link_to "Download Audio", url_for(@voiceover.file), download: true, class: 'btn btn-md btn-primary inline-block' %>
 
-  <%#= button_to "Generate Transcription", transcribe_voiceover_path(@voiceover), method: :post %>
-<% else %>
-  <p>No audio file available.</p>
-<% end %>
+    <%#= button_to "Generate Transcription", transcribe_voiceover_path(@voiceover), method: :post %>
+  <% else %>
+    <p>No audio file available.</p>
+  <% end %>
 
-<% if @voiceover.transcription.present? %>
-  <h2 class="font-semibold text-lg">Original Transcription</h2>
-  <pre class="overflow-auto"><code><%= @voiceover.transcription %></code></pre>
-  <div id="transcription" transcription="<%= @voiceover.transcription %>"></div>
-<% end %>
+  <%= link_to "Create Another Voiceover", new_voiceover_path, class: 'btn btn-md btn-primary inline-block' %>
 
-<%= link_to "Create Another Voiceover", new_voiceover_path %>
+  <% if @voiceover.subtitles.present? %>
+    <h2 class="simple-title mb-2 pb-2 border-b-2">Subtitles</h2>
+    <pre class="w-full whitespace-pre-wrap break-words overflow-auto"><code><%= JSON.pretty_generate(JSON.parse(@voiceover.subtitles), indent: '  ') %></code></pre>
+  <% end %>
+
+</div>
