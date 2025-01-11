@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_08_162841) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_11_150304) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -93,6 +93,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_08_162841) do
     t.datetime "updated_at", null: false
     t.text "transcription"
     t.integer "slide_id"
+    t.text "subtitles"
     t.index ["slide_id"], name: "index_voiceovers_on_slide_id"
   end
 

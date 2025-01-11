@@ -7,6 +7,9 @@ import ArrowTopRight from "@/components/icons/arrow-top-right.vue";
 import Divider from "@/components/icons/space-divider.vue";
 import {debounce} from "lodash-es";
 import submitForm from "../../utils/submit-form.js"
+import SendMessage from "@/components/icons/send-message.vue";
+import CircleAnim from "@/components/icons/circle-anim.vue";
+import CCheck from "@/components/icons/c-check.vue";
 
 const props = defineProps({
   courseId: {
@@ -27,6 +30,10 @@ const toc = ref('')
 const isLoading = ref(false)
 const error = ref(null)
 const parsedMarkdown = ref('')
+
+// status for submit button style
+const submitting = ref(false)
+const submitSuccess = ref(false)
 
 onMounted(async () => {
   try {
@@ -89,6 +96,8 @@ const updateParsedMarkdown = debounce(() => {
 }, 300)
 
 async function handleSubmit() {
+  submitting.value = true
+
   const response = await submitForm("/courses/" + props.courseId, "PATCH", {
     'title': title.value,
     'production_date': productionDate.value,
@@ -111,7 +120,11 @@ async function handleSubmit() {
 
   if (response2.ok) {
     console.log("sections are submitted successfully!")
+    submitSuccess.value = true
+    setTimeout(() => submitSuccess.value = false, 6000)
   }
+
+  submitting.value = false
 }
 
 
@@ -185,20 +198,22 @@ watch((raw) => {
             <input type="text" class="input w-full" placeholder="input course name" v-model="title"/>
           </div>
         </div>
-        <button @click="handleSubmit" class="my-5 sticky top-5 btn btn-md btn-secondary z-20">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><title>send-message</title>
-            <g fill="#fff">
-              <path
-                d="M15.707,.293c-.273-.272-.68-.365-1.043-.234L.664,5.059C.287,5.193,.026,5.54,.002,5.939c-.024,.4,.192,.775,.551,.955l4.586,2.292,4.641-3.314c.23-.164,.513,.119,.349,.349l-3.315,4.642,2.292,4.586c.171,.339,.518,.552,.895,.552,.021,0,.041-.001,.061-.002,.4-.024,.747-.284,.882-.662L15.943,1.336c.129-.363,.037-.77-.236-1.043Z"
-                fill="#fff"></path>
-            </g>
-          </svg>
-          Submit Changes
-        </button>
+        <div class="flex items-center gap-4">
+          <button @click="handleSubmit" class="my-5 sticky top-5 btn btn-md btn-primary z-20 " :class="{'disabled':submitting}" :disabled="submitting">
+            <CircleAnim v-if="submitting" class="h-4" />
+            <SendMessage v-else class="h-4"/>
+            {{ submitting ? "Submitting..." : "Submit Changes" }}
+          </button>
+          <div v-if="submitSuccess" class="flex gap-1 items-center">
+            <CCheck class="h-4 text-green-500" />
+            <span class="text-green-500">Sections are created!</span>
+<!--            <button class="ml-4 btn btn-sm btn-primary">Proceed to Slides -></button>-->
+          </div>
+        </div>
 
         <!--        parsedMarkdown-->
         <div ref="sectionsContainer"
-             class="article !w-full !py-3  !m-0 section-divider px-4 border-8 border-gray-300 rounded-xl"
+             class="article bg-white !w-full !py-3  !m-0 section-divider px-4 border-8 border-gray-300 rounded-xl"
              v-html="parsedMarkdown"></div>
 
         <!--        toc-->

@@ -5,7 +5,7 @@ class SlidesController < ApplicationController
 
     if course
       # Fetch all slides belonging to the course
-      slides = course.slides.select(:page_number, :indicator, :template_name, :text_for_display, :text_for_voiceover)
+      slides = course.slides.select(:page_number, :indicator, :template_name, :text_for_display, :prompt, :text_for_voiceover)
       templates = Template.pluck(:name, :slots)
       render json: { slides:, templates:, }, status: :ok
     else
