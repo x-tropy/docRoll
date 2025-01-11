@@ -42,11 +42,10 @@ const durations = segments.slice(1).map((item, i) => item - segments[i])
 
 const screenshot = ref('')
 
+// test: dom to image
 function toImage() {
   const target = document.querySelector("#target")
-  // html2canvas(target).then(canvas => {
-  //   screenshot.value = canvas.toDataURL('image/png')
-  // })
+
   domtoimage.toPng(target, {
     height: target.offsetHeight * 2,
     style: {
@@ -54,22 +53,12 @@ function toImage() {
     },
     width: target.offsetWidth * 2
   })
-      .then(dataUrl => screenshot.value = dataUrl)
+    .then(dataUrl => screenshot.value = dataUrl)
 }
 </script>
 
 <template>
-  <button class="btn btn-md btn-primary" @click="toImage">Capture</button>
-  <img :src="screenshot"/>
   <div id="target" class="bg-white">
-    <button class="btn btn-md flex items-center gap-2 mt-2 btn-primary">
-      <Map/>
-      <span>Capture</span>
-    </button>
-    <div class="mt-2 relative">
-      <img :src="Mist" class="w-[400px]"/>
-      <div class="rounded bg-white bg-opacity-50 m-4 absolute w-3/4 h-3/4 top-0"></div>
-    </div>
     <hr class="h-1 my-5"/>
     <h2 class="font-semibold text-lg">Word Transcription</h2>
     <pre class="w-full overflow-scroll"><code>{{ words }}</code></pre>
