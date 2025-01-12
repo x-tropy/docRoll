@@ -52,7 +52,7 @@
     }
 
     .label {
-        @apply text-sm font-semibold mb-1;
+        @apply text-sm font-semibold mb-1 text-gray-600;
         &.required {
             &::before {
                 content: "*";
@@ -67,15 +67,15 @@
 
     .section-divider {
         h2, h3, h4, h5 {
-            @apply border-t-8 border-gray-300 pt-2 relative;
+            @apply border-t-8 border-cyan-100 pt-2 relative;
             &::before {
                 content: "";
-                @apply inline-block h-[22px] w-[30px] absolute -top-[15px] -left-4;
+                @apply inline-block h-[24px] w-[30px] absolute -top-[16px] -left-4;
                 background-image: url("../images/left-corner.svg");
             }
             &::after {
                 content: "";
-                @apply inline-block h-[22px] w-[30px] absolute -top-[15px] -right-4 rotate-180;
+                @apply inline-block h-[24px] w-[30px] absolute -top-[16px] -right-4 rotate-180;
                 background-image: url("../images/left-corner.svg");
             }
         }

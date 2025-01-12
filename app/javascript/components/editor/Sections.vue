@@ -213,7 +213,7 @@ watch((raw) => {
 
         <!--        parsedMarkdown-->
         <div ref="sectionsContainer"
-             class="article bg-white !w-full !py-3  !m-0 section-divider px-4 border-8 border-gray-300 rounded-xl"
+             class="article bg-white !w-full !py-3  !m-0 section-divider px-4 border-8 border-cyan-100 rounded-xl"
              v-html="parsedMarkdown"></div>
 
         <!--        toc-->

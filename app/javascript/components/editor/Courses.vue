@@ -86,9 +86,9 @@ onMounted(() => {
   </p>
   <ul class="grid grid-cols-3 m-10 pb-10 gap-5">
     <li @click="emit('goto-sections', course.id)" v-for="(course, i) in courses"
-        class="col-span-1 bg-gray-200 aspect-[16/9] bg-cover rounded-lg hover:shadow-md transition-all hover:-translate-y-2 cursor-pointer"
+        class="col-span-1 aspect-[16/9] bg-cover rounded-lg hover:shadow-md transition-all hover:-translate-y-2 cursor-pointer"
         :style="`background-image: url(${mist})`" :key="i">
-      <div class="bg-white bg-opacity-45 backdrop-blur h-full flex flex-col">
+      <div class="bg-white bg-opacity-35 backdrop-blur h-full flex flex-col">
         <div class="flex justify-between text-xs pl-3 pr-2 py-2 items-center text-gray-500">
           <span class="">{{ longDate(course.production_date) }}</span>
           <div class="rounded-full bg-gray-600 text-white bg-opacity-50 pr-2 pl-1 py-0.5 flex items-center gap-1">
