@@ -9,7 +9,7 @@
     <h2 class="simple-title mb-2 pb-2 border-b-2">Generated Audio</h2>
     <a class="text-blue-400 hover:cursor-pointer" href="https://elevenlabs.io/docs/api-reference/text-to-speech/convert-with-timestamps?playground=%2Fdocs%2Fapi-reference%2Ftext-to-speech%2Fconvert-with-timestamps">Elevenlabs
       API ↗</a>
-    <audio controls>
+    <audio  controls>
       <source src="<%= url_for(@voiceover.file) %>" type="audio/mpeg">
       Your browser does not support the audio element.
     </audio>
@@ -21,6 +21,10 @@
   <% end %>
 
   <%= link_to "Create Another Voiceover", new_voiceover_path, class: 'btn btn-md btn-primary inline-block' %>
+
+  <h2 class="simple-title mb-2 pb-2 border-b-2">Player</h2>
+
+  <div id="SubtitlePlayer" data-audio-url="<%= url_for(@voiceover.file) %>" data-subtitles="<%= @voiceover.subtitles %>"></div>
 
   <% if @voiceover.subtitles.present? %>
     <h2 class="simple-title mb-2 pb-2 border-b-2">Subtitles</h2>
