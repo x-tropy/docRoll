@@ -9,9 +9,30 @@ class VoiceoversController < ApplicationController
     if @voiceover.save
       # Trigger audio generation after saving the text
       generate_audio(@voiceover)
-      redirect_to @voiceover, notice: "Voiceover created successfully!"
+
+      respond_to do |format|
+        format.html do
+          redirect_to @voiceover, notice: "Voiceover created successfully!"
+        end
+        format.json do
+          render json: {
+            message: "Voiceover created successfully!",
+            audio_url: url_for(@voiceover.file),
+            subtitles: @voiceover.subtitles.present? ? JSON.parse(@voiceover.subtitles) : nil
+          }, status: :created
+        end
+      end
     else
-      render :new, status: :unprocessable_entity
+      respond_to do |format|
+        format.html do
+          render :new, status: :unprocessable_entity
+        end
+        format.json do
+          render json: {
+            errors: @voiceover.errors.full_messages
+          }, status: :unprocessable_entity
+        end
+      end
     end
   end
 

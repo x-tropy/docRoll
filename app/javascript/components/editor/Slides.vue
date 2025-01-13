@@ -12,6 +12,8 @@ import T3 from "../templates/T3.vue"
 import T6 from "../templates/T6.vue"
 import SendMessage from "@/components/icons/send-message.vue";
 import Soundwave from "@/components/icons/soundwave.vue";
+import submitForm from "@/utils/submit-form.js";
+import ButtonPlay from "@/components/icons/button-play.vue";
 
 const templateComponents = {T1, T2, T3, T4, T5, T6}
 
@@ -26,17 +28,89 @@ const props = defineProps({
 const emit = defineEmits(['goto-courses', 'goto-sections'])
 const slides = ref([])
 const templates = ref([])
-const currentTemplateName = ref('')
 const availableSlots = computed(() => {
-  return templates.value.find(t => t[0] === currentTemplateName.value)?.[1] || '(none)'
+  return templates.value.find(t => t[0] === slides.value[slideIndex.value].template_name)?.[1] || '(none)'
 })
-const slideIndex = ref(0)
-const textForDisplay = computed(() => {
+const parsedTextForDisplay = computed(() => {
   if (slides.value.length > 0)
     return JSON.parse(slides.value[slideIndex.value].text_for_display)
 })
 const slidesNotFound = ref(false)
-const textForVoiceover = ref('')
+const slideIndex = ref(0)
+
+// Voiceover related
+const textForVoiceover = ref("")
+const audioUrl = ref('')
+const subtitles = ref([])
+const audioRef = ref(null)
+
+const sendPrompt = async () => {
+  console.log({
+    "general_prompt": slides.value[slideIndex.value].prompt,
+    "input_object": slides.value[slideIndex.value].text_for_display,
+  })
+  const resp = await submitForm("/slides/generate", "POST", {
+    "general_prompt": slides.value[slideIndex.value].prompt,
+    "input_object": slides.value[slideIndex.value].text_for_display,
+  })
+  if (resp.ok) {
+    const data = await resp.json()
+    console.log(data)
+    textForVoiceover.value = data.text_for_voiceover
+    if (data.body && parsedTextForDisplay.value.body) {
+      parsedTextForDisplay.value.body = data.body
+    }
+  }
+}
+
+const changeSlide = i => {
+  slideIndex.value = i
+  textForVoiceover.value = slides.value[slideIndex.value].text_for_voiceover
+}
+
+const generateVoice = async () => {
+  const body = {
+    'voiceover[text]': textForVoiceover.value,
+    'voiceover[slide_id]': slides.value[slideIndex.value].id
+  }
+  console.log(body)
+  const resp = await submitForm("voiceovers", "POST", body)
+  if (resp.ok) {
+    const data = await resp.json()
+    audioUrl.value = data.audio_url
+    subtitles.value = data.subtitles
+  } else {
+    console.log(resp)
+  }
+
+}
+
+const save = async () => {
+  const body = {
+    "slide[text_for_display]": parsedTextForDisplay.value,
+    "slide[text_for_voiceover]": textForVoiceover.value,
+    "slide[prompt]": slides.value[slideIndex.value].prompt
+  }
+
+  const resp = await submitForm("slides/"+slides.value[slideIndex.value].id, "PATCH", body)
+  if (resp.ok) {
+    const data = await resp.json()
+    slides.value[slideIndex.value].text_for_voiceover = textForVoiceover.value
+    console.log(data)
+  } else {
+    console.log(resp)
+  }
+}
+
+const playVoiceover = () => {
+  if (!audioRef.value) return
+
+  if (audioRef.value.paused) {
+    audioRef.value.play()
+  } else {
+    audioRef.value.pause()
+  }
+}
 
 onMounted(async () => {
   // check course id
@@ -49,10 +123,9 @@ onMounted(async () => {
   if (resp.ok) {
     const data = await resp.json()
     if (data.slides.length === 0) slidesNotFound.value = true
-    console.log(data.slides)
     slides.value = data.slides
+    textForVoiceover.value = slides.value[slideIndex.value].text_for_voiceover
     templates.value = data.templates
-    currentTemplateName.value = slides.value[slideIndex.value]?.template_name
   }
 })
 </script>
@@ -108,7 +181,7 @@ onMounted(async () => {
       <li
         class="w-[40px] py-2 m-1.5 font-mono  text-sm font-black bg-gray-200 select-none hover:shadow-md hover:bg-white hover:text-cyan-400 hover:bg-gray-200 text-center rounded  hover:cursor-pointer "
         v-for="i in range(0, slides.length)"
-        :class="{ '!bg-gray-600 shadow-md text-cyan-300 hover:bg-gray-600': slideIndex === i }" @click="slideIndex = i">
+        :class="{ '!bg-gray-600 shadow-md text-cyan-300 hover:bg-gray-600': slideIndex === i }" @click="changeSlide(i)">
         {{ i + 1 }}
       </li>
     </ul>
@@ -116,8 +189,8 @@ onMounted(async () => {
     <!--    form fields-->
     <div v-if="slides.length > 0" class="w-[460px] pt-2 px-3 mt-16 overflow-auto flex flex-col gap-5">
       <div>
-        <p class="label required">Template</p>
-        <select class="input pr-10 w-full" v-model="currentTemplateName">
+        <p class="label required">Template (can't change)</p>
+        <select class="input pr-10 w-full" disabled v-model="slides[slideIndex].template_name">
           <option v-for="(arr, i) in templates" :key="i" :value="arr[0]">{{ arr[0] }}</option>
         </select>
         <p class="text-sm mt-2">Available slots: <span class="font-mono text-cyan-400">{{ availableSlots }}</span></p>
@@ -126,23 +199,36 @@ onMounted(async () => {
         <p class="label required">Prompt</p>
         <textarea class="input w-full" placeholder="prompt for generating voiceover text and slide text" rows="5"
                   v-model="slides[slideIndex].prompt"></textarea>
-        <button class="btn btn-primary btn-md">
+        <button @click="sendPrompt" class="btn btn-primary btn-md">
           <SendMessage class="h-4"/>
           Send Prompt
         </button>
       </div>
       <div>
-        <p class="label required">Text for voiceover</p>
+        <p class="label required">Text for Display</p>
+        <textarea class="input w-full" rows="5" placeholder="used to control content display"
+                  :value="JSON.stringify(parsedTextForDisplay, null, 2)"></textarea>
+      </div>
+      <div>
+        <p class="label required">Text for Voiceover</p>
         <textarea class="input w-full" rows="5" placeholder="used to generate voice file (.mp3)"
                   v-model="textForVoiceover"></textarea>
-        <button class="btn btn-primary btn-md">
-          <Soundwave class="h-4"/>
-          Generate Voice
-        </button>
+        <div class="flex justify-between">
+          <button @click="generateVoice" class="btn btn-primary btn-md">
+            <Soundwave class="h-4"/>
+            Generate Voice
+          </button>
+          <button @click="playVoiceover" class="btn btn-primary btn-md"><ButtonPlay class="h-4"/> Preview</button>
+        </div>
+        <div v-if="audioUrl" >
+          <audio ref="audioRef" class="w-full" controls>
+            <source :src="audioUrl" type="audio/mpeg">
+          </audio>
+        </div>
       </div>
-      <div class="mb-10">
+      <div class="mb-6">
         <hr class="h-0.5 mb-5 bg-gray-300"/>
-        <button class="btn justify-center btn-primary w-full btn-md">
+        <button @click="save" class="btn justify-center btn-primary w-full btn-md">
           <SendMessage class="h-4"/>
           Submit Changes
         </button>
@@ -151,16 +237,16 @@ onMounted(async () => {
 
     <!--    template components-->
     <div v-if="slides.length > 0" class=" p-4 pt-[70px] overflow-auto flex-grow">
-      <component :is="templateComponents[currentTemplateName]"
-                 :author="textForDisplay.author"
+      <component :is="templateComponents[slides[slideIndex].template_name]"
+                 :author="parsedTextForDisplay.author"
                  :indicator="slides[slideIndex].indicator"
-                 :courseTitle="textForDisplay.courseTitle"
+                 :courseTitle="parsedTextForDisplay.courseTitle"
                  :pageNumber="slides[slideIndex].page_number"
-                 :productionDate="textForDisplay.productionDate"
-                 :sourceUrl="textForDisplay.sourceUrl"
-                 :body="textForDisplay.body"
-                 :chapterIndex="textForDisplay.chapterIndex"
-                 :chapterTitle="textForDisplay.chapterTitle"
+                 :productionDate="parsedTextForDisplay.productionDate"
+                 :sourceUrl="parsedTextForDisplay.sourceUrl"
+                 :body="parsedTextForDisplay.body"
+                 :chapterIndex="parsedTextForDisplay.chapterIndex"
+                 :chapterTitle="parsedTextForDisplay.chapterTitle"
       />
     </div>
   </div>

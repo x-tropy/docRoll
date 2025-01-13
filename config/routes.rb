@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   end
   resources :sections, only: [:create]
 
+  post "slides/generate", to: "slides#generate"
+  patch "slides/:id", to: "slides#update"
 
   get "home/index"
   resources :scripts
