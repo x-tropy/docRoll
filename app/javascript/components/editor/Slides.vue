@@ -1,8 +1,9 @@
 <script setup>
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, onMounted, onUnmounted, ref, watch} from "vue";
 import BlankState from "@/components/ui/BlankState.vue";
 import PcPlayMedia from "@/components/icons/pc-play-media.vue";
 import SpaceDivider from "@/components/icons/space-divider.vue";
+import CircleAnim from "@/components/icons/circle-anim.vue";
 import {range} from "lodash-es";
 import T1 from "../templates/T1.vue"
 import T4 from "../templates/T4.vue"
@@ -44,11 +45,13 @@ const audioUrl = ref('')
 const subtitles = ref([])
 const audioRef = ref(null)
 
+const sendingPrompt = ref(false)
 const sendPrompt = async () => {
   console.log({
     "general_prompt": slides.value[slideIndex.value].prompt,
     "input_object": slides.value[slideIndex.value].text_for_display,
   })
+  sendingPrompt.value = true
   const resp = await submitForm("/slides/generate", "POST", {
     "general_prompt": slides.value[slideIndex.value].prompt,
     "input_object": slides.value[slideIndex.value].text_for_display,
@@ -61,6 +64,7 @@ const sendPrompt = async () => {
       parsedTextForDisplay.value.body = data.body
     }
   }
+  sendingPrompt.value = false
 }
 
 const changeSlide = i => {
@@ -68,7 +72,9 @@ const changeSlide = i => {
   textForVoiceover.value = slides.value[slideIndex.value].text_for_voiceover
 }
 
+const generatingVoice = ref(false)
 const generateVoice = async () => {
+  generatingVoice.value = true
   const body = {
     'voiceover[text]': textForVoiceover.value,
     'voiceover[slide_id]': slides.value[slideIndex.value].id
@@ -77,22 +83,25 @@ const generateVoice = async () => {
   const resp = await submitForm("voiceovers", "POST", body)
   if (resp.ok) {
     const data = await resp.json()
+    console.log(data)
     audioUrl.value = data.audio_url
     subtitles.value = data.subtitles
   } else {
     console.log(resp)
   }
-
+  generatingVoice.value = false
 }
 
+const submitting= ref(false)
 const save = async () => {
+  submitting.value = true
   const body = {
     "slide[text_for_display]": parsedTextForDisplay.value,
     "slide[text_for_voiceover]": textForVoiceover.value,
     "slide[prompt]": slides.value[slideIndex.value].prompt
   }
 
-  const resp = await submitForm("slides/"+slides.value[slideIndex.value].id, "PATCH", body)
+  const resp = await submitForm("slides/" + slides.value[slideIndex.value].id, "PATCH", body)
   if (resp.ok) {
     const data = await resp.json()
     slides.value[slideIndex.value].text_for_voiceover = textForVoiceover.value
@@ -100,6 +109,7 @@ const save = async () => {
   } else {
     console.log(resp)
   }
+  submitting.value = false
 }
 
 const playVoiceover = () => {
@@ -111,6 +121,29 @@ const playVoiceover = () => {
     audioRef.value.pause()
   }
 }
+
+const lastCheckedTime = ref(0)
+const currentSubtitle = ref('')
+const updateSubtitle = () => {
+  if (!audioRef.value) return
+
+  const currentTime = audioRef.value.currentTime
+  if (Math.abs(currentTime - lastCheckedTime.value) < 0.5) {
+    return
+  }
+
+  lastCheckedTime.value = currentTime
+
+  const subtitle = subtitles.value.find(sub =>
+    currentTime >= sub.start_time && currentTime <= sub.end_time
+  )
+
+  currentSubtitle.value = subtitle ? subtitle.text : ''
+}
+
+watch(audioRef, newVal => {
+  newVal.addEventListener('timeupdate', updateSubtitle)
+})
 
 onMounted(async () => {
   // check course id
@@ -126,6 +159,12 @@ onMounted(async () => {
     slides.value = data.slides
     textForVoiceover.value = slides.value[slideIndex.value].text_for_voiceover
     templates.value = data.templates
+  }
+})
+
+onUnmounted(() => {
+  if (audioRef.value) {
+    audioRef.value.removeEventListener('timeupdate', updateSubtitle)
   }
 })
 </script>
@@ -199,9 +238,11 @@ onMounted(async () => {
         <p class="label required">Prompt</p>
         <textarea class="input w-full" placeholder="prompt for generating voiceover text and slide text" rows="5"
                   v-model="slides[slideIndex].prompt"></textarea>
-        <button @click="sendPrompt" class="btn btn-primary btn-md">
-          <SendMessage class="h-4"/>
-          Send Prompt
+        <button @click="sendPrompt" class="btn btn-primary btn-md" :class="{'disabled':sendingPrompt}"
+                :disabled="sendingPrompt">
+          <CircleAnim v-if="sendingPrompt" class="h-4"/>
+          <SendMessage v-else class="h-4"/>
+          {{ sendingPrompt ? "Sending..." : "Send Prompt" }}
         </button>
       </div>
       <div>
@@ -210,17 +251,22 @@ onMounted(async () => {
                   :value="JSON.stringify(parsedTextForDisplay, null, 2)"></textarea>
       </div>
       <div>
-        <p class="label required">Text for Voiceover</p>
+        <p class="label required">Text for Vsoiceover</p>
         <textarea class="input w-full" rows="5" placeholder="used to generate voice file (.mp3)"
                   v-model="textForVoiceover"></textarea>
         <div class="flex justify-between">
-          <button @click="generateVoice" class="btn btn-primary btn-md">
-            <Soundwave class="h-4"/>
-            Generate Voice
+          <button @click="generateVoice" class="btn btn-primary btn-md" :class="{'disabled':generatingVoice}"
+                  :disabled="generatingVoice">
+            <CircleAnim v-if="generatingVoice" class="h-4"/>
+            <Soundwave v-else class="h-4"/>
+            {{ generatingVoice ? "Generating..." : "Generate Voice" }}
           </button>
-          <button @click="playVoiceover" class="btn btn-primary btn-md"><ButtonPlay class="h-4"/> Preview</button>
+          <button @click="playVoiceover" class="btn btn-primary btn-md">
+            <ButtonPlay class="h-4"/>
+            Preview
+          </button>
         </div>
-        <div v-if="audioUrl" >
+        <div v-if="audioUrl">
           <audio ref="audioRef" class="w-full" controls>
             <source :src="audioUrl" type="audio/mpeg">
           </audio>
@@ -228,9 +274,10 @@ onMounted(async () => {
       </div>
       <div class="mb-6">
         <hr class="h-0.5 mb-5 bg-gray-300"/>
-        <button @click="save" class="btn justify-center btn-primary w-full btn-md">
-          <SendMessage class="h-4"/>
-          Submit Changes
+        <button @click="save" class="btn justify-center btn-primary w-full btn-md" :class="{'disabled':submitting}" :disabled="submitting">
+          <CircleAnim v-if="submitting" class="h-4" />
+          <SendMessage v-else class="h-4"/>
+          {{submitting ? "Submitting..." : "Submit Changes"}}
         </button>
       </div>
     </div>
@@ -247,6 +294,7 @@ onMounted(async () => {
                  :body="parsedTextForDisplay.body"
                  :chapterIndex="parsedTextForDisplay.chapterIndex"
                  :chapterTitle="parsedTextForDisplay.chapterTitle"
+                 :subtitle="currentSubtitle"
       />
     </div>
   </div>
