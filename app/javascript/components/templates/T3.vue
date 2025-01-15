@@ -15,6 +15,9 @@ defineProps({
     type: Number || String,
     required: true,
     default: 3
+  },
+  subtitle: {
+    type: String
   }
 })
 
@@ -34,6 +37,9 @@ const frame = ref(null)
           <span class="font-normal mr-3">{{ chapterIndex + '.' }}{{ i + 1 }}</span>{{ subChapter }}
         </li>
       </ol>
+    </div>
+    <div v-if="subtitle !== ''" class="subtitle-container">
+      <p class="subtitle">{{ subtitle}}</p>
     </div>
   </div>
 </template>

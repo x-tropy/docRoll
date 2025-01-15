@@ -20,6 +20,9 @@ defineProps({
     type: Number || String,
     required: true,
     default: 13
+  },
+  subtitle: {
+    type: String
   }
 })
 
@@ -30,7 +33,7 @@ const frame = ref(null)
 
 <template>
   <div class="frame" ref="frame">
-  <ToggleFullscreen @toggle-fullscreen="toggleFullscreen(frame)"/>
+    <ToggleFullscreen @toggle-fullscreen="toggleFullscreen(frame)"/>
     <div class="header">
       <span class="indicator">{{ indicator }}</span>
       <img class="logo" :src="Logo"/>
@@ -42,6 +45,9 @@ const frame = ref(null)
       <span class="absolute text-sm font-semibold bottom-0 right-0 rounded-br-xl rounded-tl-xl bg-white px-2 py-0.5">{{
           pageNumber
         }}</span>
+    </div>
+    <div v-if="subtitle !== ''" class="subtitle-container">
+      <p class="subtitle">{{ subtitle}}</p>
     </div>
   </div>
 </template>

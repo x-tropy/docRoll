@@ -35,6 +35,9 @@ defineProps({
     type: Number || String,
     required: true,
     default: 13
+  },
+  subtitle: {
+    type: String
   }
 })
 
@@ -62,6 +65,9 @@ onMounted(() => {
     <span class="absolute text-sm font-semibold bottom-3 right-3 rounded-br-xl rounded-tl-xl bg-white px-2 py-0.5">
       {{ pageNumber }}
     </span>
+    <div v-if="subtitle !== ''" class="subtitle-container">
+      <p class="subtitle">{{ subtitle }}</p>
+    </div>
   </div>
 </template>
 

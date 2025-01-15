@@ -18,6 +18,9 @@ defineProps({
     type: String,
     required: true,
     default: "A Course by docroll"
+  },
+  subtitle: {
+    type: String
   }
 })
 
@@ -35,6 +38,9 @@ const frame = ref(null)
     <div class="absolute bottom-16">
       <span class="font-serif text-xl inline-block mb-4">{{ author }} / Course</span>
       <h1 class="font-serif text-5xl font-bold">{{ courseTitle }}</h1>
+    </div>
+    <div v-if="subtitle !== ''" class="subtitle-container">
+      <p class="subtitle">{{ subtitle}}</p>
     </div>
   </div>
 </template>
